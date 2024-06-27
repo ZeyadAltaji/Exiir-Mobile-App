@@ -28,6 +28,9 @@ class AppimageUrlAsset {
   static const String server = "$rootLottie/server.json";
 
 
+  static const String logo = "$rootImages/Exiir.png";
+
+
 
   
 

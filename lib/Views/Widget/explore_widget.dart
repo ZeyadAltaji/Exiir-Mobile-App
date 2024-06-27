@@ -1,3 +1,4 @@
+import 'package:exiir3/Core/Constant/AppColors.dart';
 import 'package:exiir3/Core/Constant/ImgaeAssets.dart';
 import 'package:exiir3/Core/Functions/helper.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +47,8 @@ class ExploreWidget extends StatelessWidget {
               height: realH(122 + (500 - 122) * currentExplorePercent!),
               decoration: BoxDecoration(
                   gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-                    Color(0xFF5496FF),
-                    Color(0xFF8739E5),
+                   Appcolors.logotwo,
+                    Appcolors.logoone,
                   ]),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(realW(80 + (50 - 80) * currentExplorePercent!)),

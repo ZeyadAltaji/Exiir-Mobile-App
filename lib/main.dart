@@ -5,6 +5,7 @@ import 'package:exiir3/Controller/ConnectivityController.dart';
 import 'package:exiir3/Controller/TranslationController.dart';
 import 'package:exiir3/Core/Localization/LocaleController.dart';
 import 'package:exiir3/Core/Services/MyServices.dart';
+import 'package:exiir3/Views/screens/SplashScreen.dart';
 import 'package:exiir3/Views/screens/home_page.dart';
 import 'package:exiir3/routes.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,6 @@ class MyApp extends StatelessWidget {
 
     return ScreenUtilInit(
       builder: (context, child) {
-        // LocaleController controller = Get.put(LocaleController());
 
         return GetMaterialApp(
           title: "Flutter Demo",
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          home: HomePage(),
+          home:const SplashScreen(),
           theme: controller.appTheme ,
           initialBinding: InitialBindings(),
           getPages:routes,

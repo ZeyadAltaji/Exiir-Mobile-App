@@ -33,54 +33,7 @@ class HomeController extends BaseController {
     creatMarkers();
     updateUserLocation();  
   }
-  // Future<void> creatMarkers() async {
-  //    statusRequest = StatusRequest.loading;
-  //   update();
-
-  //   var response = await request.getData('ExiirManagementAPI/ChargingStationsInfo');
-
-  //   statusRequest = handlingData(response);
-  //   if (statusRequest == StatusRequest.success) {
-  //     var data = response.fold((l) => null, (r) => r);
-  //     if (data != null) {
-  //       chargingStations = (data as List).map((item) => ChargingStations.fromJson(item)).toList();
-
-  //       // Convert ChargingStations to StationsModels and add to stations list
-  //       stations.addAll(chargingStations.map((cs) => StationsModels(
-  //         stationsName: cs.csNameAr,
-  //         stationsPhone: cs.csPhone,
-  //         x: cs.csLatitude.toString(),
-  //         y: cs.csLangtitude.toString(),
-  //       )).toList());
-  //        sortStationsByDistance();
-  //   for (int i = 0; i < stations.length; i++) {
-  //        final station = stations[i];
-  //       final distance = calculateDistance(
-  //       center.value,
-  //       LatLng(double.parse(station.x!), double.parse(station.y!)),
-        
-  //     );   
-  //     final estimatedTime = (distance / 50) * 60; 
-  //        markers.add(
-  //       Marker(
-  //         markerId: MarkerId(stations[i].stationsName.toString()),
-  //         position: LatLng(double.parse(stations[i].x.toString()),
-  //             double.parse(stations[i].y.toString())),
-  //         icon: await getCustomerMarkerIcon(),
-  //         infoWindow: InfoWindow(
-  //           title: stations[i].stationsName.toString(),
-  //           snippet: 'Open from 6:00 AM to 7:00 PM\n${distance.toStringAsFixed(2)} km away',
-  //         ),
-  //         onTap: () {
-  //           // Handle tap
-  //         },
-  //       ),
-  //     );
-  //     }
-  //   }
-    
-  //   }
-  // }
+  
   Future<void> creatMarkers() async {
     await fetchChargingStations();
 
@@ -100,8 +53,6 @@ class HomeController extends BaseController {
         center.value,
         LatLng(double.parse(station.x!), double.parse(station.y!)),
       );
-      final estimatedTime = (distance / 50) * 60;
-
       markers.add(
         Marker(
           markerId: MarkerId(stations[i].stationsName.toString()),
@@ -110,10 +61,9 @@ class HomeController extends BaseController {
           icon: await getCustomerMarkerIcon(),
           infoWindow: InfoWindow(
             title: stations[i].stationsName.toString(),
-            snippet: 'Open from 6:00 AM to 7:00 PM\n${distance.toStringAsFixed(2)} km away',
+            snippet: '${distance.toStringAsFixed(2)} km away',
           ),
           onTap: () {
-            // Handle tap
           },
         ),
       );
@@ -122,7 +72,7 @@ class HomeController extends BaseController {
 
   Future<BitmapDescriptor> getCustomerMarkerIcon() async {
     final String assetPath = AppimageUrlAsset.logoMap;
-    const ImageConfiguration imageConfig = ImageConfiguration(size: Size(1, 1), devicePixelRatio: 0.2);
+    const ImageConfiguration imageConfig = ImageConfiguration(size: Size(1,1), devicePixelRatio: 0.2);
     return BitmapDescriptor.fromAssetImage(imageConfig, assetPath);
   }
 
@@ -163,34 +113,7 @@ class HomeController extends BaseController {
   });
   return await Geolocator.getCurrentPosition();
 }
-  // Future<void> updateUserLocation() async {
-  //   var location = Location();
-  //   var currentLocation = await location.getLocation();
-  //   center.value = LatLng(31.999360418399394, 35.88007842069041);
-  //   markers.add(
-  //    const Marker(
-  //       markerId: MarkerId('موقع المستخدم'),
-  //       position: LatLng(31.999360418399394, 35.88007842069041),
-  //       infoWindow: InfoWindow(
-  //         title: 'موقع المستخدم',
-  //         snippet: 'هنا أنا!',
-  //       ),
-  //     ),
-  //   );
-  //   sortStationsByDistance();
-
-  //   // Move the camera to the user's current location
-  //   if (mapController != null) {
-  //     mapController!.animateCamera(
-  //       CameraUpdate.newCameraPosition(
-  //        const  CameraPosition(
-  //           target: LatLng(31.999360418399394, 35.88007842069041),
-  //           zoom: 20.0,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
+  
   void zoomIn() {
     mapController?.animateCamera(CameraUpdate.zoomIn());
   }
@@ -233,7 +156,7 @@ class HomeController extends BaseController {
     statusRequest = StatusRequest.loading;
     update();
 
-    var response = await request.getData('ExiirManagementAPI/ChargingStationsInfo');
+    var response = await request.postdata('ExiirManagementAPI/ChargingStationsInfo');
 
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {

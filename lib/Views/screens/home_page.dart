@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool isExploreOpen = false;
   bool isSearchOpen = false;
   bool isMenuOpen = false;
-  bool isMapTypeMenuOpen = false; // New state for map type menu
+  bool isDropdownVisible = false;
   MapType mapType = MapType.normal; 
    double get currentExplorePercent => max(0.0, min(1.0, offsetExplore / (760.0 - 122.0)));
   double get currentSearchPercent => max(0.0, min(1.0, offsetSearch / (347 - 68.0)));
@@ -123,9 +123,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     animationControllerMenu.forward();
   }
-  void toggleMapTypeMenu() {
+    void toggleDropdownVisibility() {
     setState(() {
-      isMapTypeMenuOpen = !isMapTypeMenuOpen;
+      isDropdownVisible = !isDropdownVisible;
     });
   }
 
@@ -226,44 +226,73 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               currentSearchPercent: currentSearchPercent,
               animateSearch: animateSearch,
             ),
-            //layer button
-            MapButton(
-              currentExplorePercent: currentExplorePercent,
-              currentSearchPercent: currentSearchPercent,
+             Positioned(
               bottom: 300,
-              offsetX: -71,
-              width: 71,
-              height: 71,
-              isRight: false,
-              icon: Icons.layers,
-              onTap:  () {
-                toggleMapTypeMenu();
+              left: 0,
+              child: Column(
+                children: [
+                  if (isDropdownVisible)
+                    Column(
+                      children: [
+                        FloatingActionButton(
+                          onPressed: () {
+                             changeMapType(MapType.satellite);
+                           },
+                          mini: true,
+                          child: Icon(Icons.satellite),
+                        ),
+                        FloatingActionButton(
+                          onPressed: () {
+                             changeMapType(MapType.normal);
+                           },
+                          mini: true,
+                          child: Icon(Icons.layers),
+                        ),
+                      ],
+                    ),
+                     MapButton(
+                      currentExplorePercent: currentExplorePercent,
+                      currentSearchPercent: currentSearchPercent,
+                      bottom: 300,
+                      offsetX: -71,
+                      width: 71,
+                      height: 71,
+                      isRight: false,
+                      icon: Icons.layers,
+                      onTap:  () {
+                        toggleDropdownVisibility();
               } ,
             ),
-              if (isMapTypeMenuOpen) 
-               Positioned(
- right: 20,
-                top: 100,
-                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        changeMapType(MapType.normal);
-                      },
-                      child: Text('Auto'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        changeMapType(MapType.satellite);
-                      },
-                      child: Text('Satellite'),
-                    ),
-                  ],
+                ],
+              )
+             ),
+            //layer button
+           
+              // if (isDropdownVisible) 
+         
+              //  Positioned(
+              //   right: 20,
+              //   top: 100,
+              //    child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.end,
+              //     children: [
+              //       ElevatedButton(
+              //         onPressed: () {
+              //           changeMapType(MapType.normal);
+              //         },
+              //         child: Text('Auto'),
+              //       ),
+              //       ElevatedButton(
+              //         onPressed: () {
+              //           changeMapType(MapType.satellite);
+              //         },
+              //         child: Text('Satellite'),
+              //       ),
+              //     ],
 
-                 )
+              //    )
 
-               ),
+              //  ),
               MapButton(
               currentExplorePercent: currentExplorePercent,
               currentSearchPercent: currentSearchPercent,

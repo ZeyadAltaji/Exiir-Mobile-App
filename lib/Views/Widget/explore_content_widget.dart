@@ -1,4 +1,5 @@
 
+import 'package:exiir3/Core/Constant/AppColors.dart';
 import 'package:exiir3/Core/Functions/calculateDistance.dart';
 import 'package:exiir3/Core/Functions/helper.dart';
 import 'package:flutter/material.dart';
@@ -54,20 +55,20 @@ class ExploreContentWidget extends StatelessWidget {
                                   children: [
                                     Text(
                                       station.stationsName ?? 'Unknown Station',
-                                      style: TextStyle(color: Colors.white, fontSize: realH(18)),
+                                      style: TextStyle(color: Colors.white, fontSize: realH(20)),
                                     ),
                                     SizedBox(height: 8.0),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "${distance.toStringAsFixed(1)} km away",
-                                          style: TextStyle(color: Colors.white54, fontSize: realH(14)),
+                                          "Open from 6:00 AM to 7:00 PM",
+                                          style: TextStyle(color: Appcolors.white, fontSize: realH(15)),
                                         ),
                                         SizedBox(height: 4.0),
                                         Text(
                                           "Phone: ${station.stationsPhone ?? 'N/A'}",
-                                          style: TextStyle(color: Colors.white54, fontSize: realH(14)),
+                                          style: TextStyle(color: Appcolors.white, fontSize: realH(15)),
                                         ),
                                       ],
                                     ),
