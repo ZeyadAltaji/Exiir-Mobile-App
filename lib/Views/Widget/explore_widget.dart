@@ -1,6 +1,6 @@
-import 'package:exiir3/Core/Constant/AppColors.dart';
-import 'package:exiir3/Core/Constant/ImgaeAssets.dart';
-import 'package:exiir3/Core/Functions/helper.dart';
+import 'package:ExiirEV/Core/Constant/AppColors.dart';
+import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Core/Functions/helper.dart';
 import 'package:flutter/material.dart';
  
 class ExploreWidget extends StatelessWidget {

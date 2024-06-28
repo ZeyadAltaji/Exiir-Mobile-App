@@ -1,61 +1,44 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:exiir3/Bindings/intialbindings.dart';
-import 'package:exiir3/Controller/ConnectivityController.dart';
-import 'package:exiir3/Controller/TranslationController.dart';
-import 'package:exiir3/Core/Localization/LocaleController.dart';
-import 'package:exiir3/Core/Services/MyServices.dart';
-import 'package:exiir3/Views/screens/SplashScreen.dart';
-import 'package:exiir3/Views/screens/home_page.dart';
-import 'package:exiir3/routes.dart';
+import 'package:ExiirEV/Bindings/intialbindings.dart';
+import 'package:ExiirEV/Controller/ConnectivityController.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Localization/LocaleController.dart';
+import 'package:ExiirEV/Core/Services/MyServices.dart';
+import 'package:ExiirEV/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'helper/language/config/config_lang.dart';
 
 void main() async {
     WidgetsFlutterBinding.ensureInitialized();
-
-      await initialServices();
-
+    await initialServices();
+    Get.put(LocaleController());
     Get.put(ConnectivityController());
     Get.put(TranslationController());
 
-    // final TranslationController translationController = Get.find();
 
   await EasyLocalization.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
-  runApp(
-    EasyLocalization(
-      supportedLocales: const [ConfigLanguage.EN_LOCALE, ConfigLanguage.AR_LOCALE],
-      path: ConfigLanguage.LANG_PATH,
-      fallbackLocale: ConfigLanguage.EN_LOCALE,
-      child: MyApp(),
-    ),
-  );
+  final TranslationController translationController = Get.find();
+  await translationController.fetchLanguage();
+  await translationController.fetchMessages();
+  runApp( const  MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
         LocaleController controller = Get.put(LocaleController());
-
-    return ScreenUtilInit(
-      builder: (context, child) {
-
         return GetMaterialApp(
-          title: "Flutter Demo",
+          locale: controller.language,
           debugShowCheckedModeBanner: false,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          home:const SplashScreen(),
           theme: controller.appTheme ,
           initialBinding: InitialBindings(),
-          getPages:routes,
+          getPages: routes,
+
         );
-      },
-    );
   }
 }
 

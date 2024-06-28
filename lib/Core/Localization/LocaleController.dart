@@ -1,5 +1,5 @@
-import 'package:exiir3/Controller/BaseController.dart';
-import 'package:exiir3/Core/Services/MyServices.dart';
+import 'package:ExiirEV/Controller/BaseController.dart';
+import 'package:ExiirEV/Core/Services/MyServices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,11 +27,15 @@ class LocaleController extends BaseController{
       appTheme = ThemeAr;
     }
     else if (GetLang == 'en') {
-      language = const Locale('en');appTheme = ThemeEn;
+      language = const Locale('en');
+      appTheme = ThemeEn;
     }
     else {
-      language =  Locale(Get.deviceLocale!.languageCode) ; 
+      language =  const Locale('ar') ; 
+      appTheme = ThemeAr;
+
     }
+    Get.updateLocale(language!);
     super.onInit(); 
   }
 }

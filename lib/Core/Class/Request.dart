@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
-import 'package:exiir3/Controller/TranslationController.dart';
-import 'package:exiir3/Core/Constant/Environment.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Constant/Environment.dart';
 import 'package:get/get.dart';
 import 'package:http/io_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';

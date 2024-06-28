@@ -1,6 +1,6 @@
 
-import 'package:exiir3/Core/Class/StatusRequest.dart';
-import 'package:exiir3/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Core/Class/StatusRequest.dart';
+import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';

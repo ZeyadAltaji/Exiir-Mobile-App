@@ -1,16 +1,17 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:exiir3/Controller/HomeController.dart';
-import 'package:exiir3/Core/Functions/helper.dart';
-import 'package:exiir3/Views/Widget/explore_content_widget.dart';
-import 'package:exiir3/Views/Widget/explore_widget.dart';
-import 'package:exiir3/Views/Widget/map_button.dart';
-import 'package:exiir3/Views/Widget/menu_widget.dart';
-import 'package:exiir3/Views/Widget/recent_search_widget.dart';
-import 'package:exiir3/Views/Widget/search_back_widget.dart';
-import 'package:exiir3/Views/Widget/search_menu_widget.dart';
-import 'package:exiir3/Views/Widget/search_widget.dart';
+import 'package:ExiirEV/Controller/HomeController.dart';
+import 'package:ExiirEV/Core/Constant/AppColors.dart';
+import 'package:ExiirEV/Core/Functions/helper.dart';
+import 'package:ExiirEV/Views/Widget/explore_content_widget.dart';
+import 'package:ExiirEV/Views/Widget/explore_widget.dart';
+import 'package:ExiirEV/Views/Widget/map_button.dart';
+import 'package:ExiirEV/Views/Widget/menu_widget.dart';
+import 'package:ExiirEV/Views/Widget/recent_search_widget.dart';
+import 'package:ExiirEV/Views/Widget/search_back_widget.dart';
+import 'package:ExiirEV/Views/Widget/search_menu_widget.dart';
+import 'package:ExiirEV/Views/Widget/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -199,7 +200,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       opacity: currentSearchPercent,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Appcolors.white,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(realW(33)), topRight: Radius.circular(realW(33)))),
                       ),
@@ -327,7 +328,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               width: 68,
               height: 71,
               icon: Icons.my_location,
-              iconColor: Colors.blue,
+              iconColor: Appcolors.blue,
                onTap: () {
                 controller.findNearestStation();
               },
@@ -352,7 +353,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       size: realW(34),
                     ),
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Appcolors.white,
                         borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(realW(36)), topRight: Radius.circular(realW(36))),
                         boxShadow: [

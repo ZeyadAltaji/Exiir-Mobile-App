@@ -1,4 +1,5 @@
-import 'package:exiir3/Core/Class/StatusRequest.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Class/StatusRequest.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,6 +1,7 @@
-import 'package:exiir3/Core/Constant/AppColors.dart';
-import 'package:exiir3/Core/Constant/ImgaeAssets.dart';
-import 'package:exiir3/Views/screens/home_page.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Constant/AppColors.dart';
+import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Views/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,8 @@ class _SplashScreen extends State<SplashScreen> with SingleTickerProviderStateMi
   
   @override
   Widget build(BuildContext context) {
+    final translationController = Get.put(TranslationController());
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -39,14 +42,25 @@ class _SplashScreen extends State<SplashScreen> with SingleTickerProviderStateMi
             end: Alignment.centerLeft
           ),
         ),
-        child: Center(
-          child: 
-          Image.asset(
-             AppimageUrlAsset.logo,
-            width: 350,
-            height: 350,
-            fit: BoxFit.cover,
-          ),
+         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              AppimageUrlAsset.logo,
+              width: 350,
+              height: 350,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(height: 20),
+           Text(
+              translationController.getLanguage(1),
+              style: const TextStyle(
+               fontStyle:  FontStyle.italic,
+                color: Appcolors.white,
+                fontSize: 32
+              ),
+            ) 
+           ],
         ),
       ),
     );  

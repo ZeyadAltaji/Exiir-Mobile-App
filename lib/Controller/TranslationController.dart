@@ -1,7 +1,7 @@
 
-import 'package:exiir3/Controller/BaseController.dart';
-import 'package:exiir3/Model/Language%20.dart';
-import 'package:exiir3/Model/Message.dart';
+import 'package:ExiirEV/Controller/BaseController.dart';
+import 'package:ExiirEV/Model/Language%20.dart';
+import 'package:ExiirEV/Model/Message.dart';
 import 'package:get/get.dart';
 import 'package:http/io_client.dart';
 import 'dart:convert';
@@ -10,7 +10,7 @@ import 'dart:io';
 import '../Core/Constant/Environment.dart';
  
 class TranslationController extends BaseController {
-  var Languages = <String, String>{}.obs;
+  var Languages = <int, String>{}.obs;
   var Messages = <String, String>{}.obs;
 
   @override
@@ -59,10 +59,10 @@ class TranslationController extends BaseController {
         List<dynamic> data = json.decode(response.body);
         data.forEach((item) {
           Language language = Language.fromJson(item);
-          if (language.Id != null) {
-            Languages[language.Id.toString()] = Get.locale?.languageCode == 'ar' 
-              ? (language.LangDescAr ?? '') 
-              : (language.LangDescEn ?? '');
+          if (language.id != null) {
+            Languages[language.id!] = Get.locale?.languageCode == 'ar' 
+              ? (language.langDescAr ?? '') 
+              : (language.langDescEn ?? '');
           }
         });
       } else {
@@ -73,10 +73,18 @@ class TranslationController extends BaseController {
     }
   }
 
-  String getLanguage(String key) {
-    return Languages[key] ?? key;
+  String getLanguage(int key) {
+    return Languages[key] ?? key.toString();
   }
   String GetMessages(String key){
     return Messages[key]??key;
   }
+   String Translate(String langDescAr, String langDescEn) {
+    if (Get.locale?.languageCode == 'ar') {
+      return langDescAr;
+    } else {
+      return langDescEn;
+    }
+  }
+    
 }

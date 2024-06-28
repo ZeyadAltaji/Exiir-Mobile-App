@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:exiir3/Controller/BaseController.dart';
+import 'package:ExiirEV/Controller/BaseController.dart';
 import 'package:get/get.dart';
 
 import '../Views/Dialogs/showOfflineDialog.dart';
