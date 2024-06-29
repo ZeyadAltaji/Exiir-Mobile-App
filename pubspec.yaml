@@ -29,6 +29,13 @@ dependencies:
   sizer_pro: ^2.2.0
   google_fonts: ^6.2.1
   carousel_slider: ^4.2.1
+  rounded_loading_button_plus: ^3.0.1
+  font_awesome_flutter: ^10.7.0
+  flutter_facebook_auth: ^7.0.1
+  google_sign_in: ^6.2.1
+  twitter_login: ^4.4.2
+  sign_in_with_apple: ^6.1.1
+  connectivity_plus: ^6.0.3
 
 dev_dependencies:
   flutter_test:
