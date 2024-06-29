@@ -1,11 +1,15 @@
-import 'package:dartz/dartz.dart';
-import 'package:exiir3/Controller/BaseController.dart';
-import 'package:exiir3/Core/Class/Request.dart';
-import 'package:exiir3/Core/Constant/ImgaeAssets.dart';
-import 'package:exiir3/Core/Functions/Handingdata.dart';
-import 'package:exiir3/Core/Functions/calculateDistance.dart';
-import 'package:exiir3/Model/ChargingStations.dart';
-import 'package:exiir3/Model/StationsModels.dart';
+import 'dart:math';
+
+import 'package:ExiirEV/Controller/BaseController.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Class/Request.dart';
+import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Core/Functions/Handingdata.dart';
+import 'package:ExiirEV/Core/Functions/calculateDistance.dart';
+import 'package:ExiirEV/Model/ChargingStations.dart';
+import 'package:ExiirEV/Model/StationsModels.dart';
+import 'package:ExiirEV/Views/Widget/details_content_widget.dart';
+import 'package:ExiirEV/Views/Widget/explore_content_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -16,6 +20,10 @@ import '../Core/Class/StatusRequest.dart';
 
 
 class HomeController extends BaseController {
+  final translationController = Get.put(TranslationController());
+    double offsetExplore = 0.0;
+
+   double get currentExplorePercent => max(0.0, min(1.0, offsetExplore / (760.0 - 122.0)));
   final RxSet<Marker> markers = <Marker>{}.obs;
   final RxList<StationsModels> stations = <StationsModels>[].obs;
   late Rx<LatLng> center = LatLng(31.999360418399394, 35.88007842069041).obs;
@@ -28,25 +36,28 @@ class HomeController extends BaseController {
 
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     creatMarkers();
     updateUserLocation();  
   }
   
   Future<void> creatMarkers() async {
-    await fetchChargingStations();
+  await fetchChargingStations();
 
     stations.clear();
     stations.addAll(chargingStations.map((station) => StationsModels(
-          stationsName: station.csNameAr,
+          stationsName: translationController.Translate(station.csNameAr!, station.csName!),
           stationsPhone: station.csPhone,
           x: station.csLatitude.toString(),
           y: station.csLangtitude.toString(),
+          address: station.csAddress,
+          available: Random().nextBool(),
+
         )));
 
     sortStationsByDistance();
-
+    // findNearestStationAndMove();
     for (int i = 0; i < stations.length; i++) {
       final station = stations[i];
       final distance = calculateDistance(
@@ -61,29 +72,52 @@ class HomeController extends BaseController {
           icon: await getCustomerMarkerIcon(),
           infoWindow: InfoWindow(
             title: stations[i].stationsName.toString(),
-            snippet: '${distance.toStringAsFixed(2)} km away',
+            snippet: '${distance.toStringAsFixed(2)} ${translationController.getLanguage(60)}',
+             onTap: () {
+            showme(Get.context!, stations[i], distance);
+             }
           ),
-          onTap: () {
-          },
+         
         ),
       );
     }
   }
+void showme(BuildContext context, StationsModels station, double distance) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+           return DetailsContentWidget(station: station, distance: distance);
 
+      },
+    );
+  }
+ 
   Future<BitmapDescriptor> getCustomerMarkerIcon() async {
     final String assetPath = AppimageUrlAsset.logoMap;
     const ImageConfiguration imageConfig = ImageConfiguration(size: Size(1,1), devicePixelRatio: 0.2);
     return BitmapDescriptor.fromAssetImage(imageConfig, assetPath);
   }
+ Future<void> findNearestStationAndMove() async  {
+  sortStationsByDistance();
 
+  if (stations.isNotEmpty) {
+    final nearestStation = stations.first;
+
+    await mapController?.animateCamera(
+      CameraUpdate.newLatLng(
+        LatLng(double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
+      ),
+    );
+  }
+}
 
   Future<void> updateUserLocation() async {
     getUserCurrentLocation().then((value) async {
-      center.value = LatLng(value.latitude, value.longitude);
+      center.value = LatLng(31.999360418399394, 35.88007842069041);
       markers.add(
         Marker(
           markerId: MarkerId('موقع المستخدم'),
-          position: LatLng(value.latitude, value.longitude),
+          position: LatLng(31.999360418399394, 35.88007842069041),
           infoWindow: InfoWindow(
             title: 'موقع المستخدم',
             snippet: 'هنا أنا!',
@@ -97,7 +131,7 @@ class HomeController extends BaseController {
         mapController!.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
-              target: LatLng(value.latitude, value.longitude),
+              target: LatLng(31.999360418399394, 35.88007842069041),
               zoom: 20.0,
             ),
           ),
@@ -167,6 +201,8 @@ class HomeController extends BaseController {
     }
 
     update();
+     
+
   }
  
 
