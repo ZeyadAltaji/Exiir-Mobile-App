@@ -34,6 +34,7 @@ class ConnectivityController extends BaseController {
       }
     }
   }
+
   void checkInternetPeriodically() {
     Future.delayed(Duration(seconds: 5), () async {
       await checkInternet();

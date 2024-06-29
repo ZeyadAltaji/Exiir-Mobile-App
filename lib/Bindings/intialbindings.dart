@@ -1,4 +1,4 @@
- import 'package:ExiirEV/Core/Class/Request.dart';
+import 'package:ExiirEV/Core/Class/Request.dart';
 import 'package:get/get.dart';
 
 import '../Controller/ConnectivityController.dart';

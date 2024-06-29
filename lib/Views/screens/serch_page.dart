@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
- import '../base/card_stations.dart';
+import '../base/card_stations.dart';
 
 class SerchPage extends StatelessWidget {
   const SerchPage({

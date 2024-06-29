@@ -34,7 +34,7 @@ void showOfflineDialog() {
         content: Text(content),
         actions: [
           TextButton(
-          onPressed: () => exit(0),
+            onPressed: () => exit(0),
             child: Text(BtnText),
           ),
         ],

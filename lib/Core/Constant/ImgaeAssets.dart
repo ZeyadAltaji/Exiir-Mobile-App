@@ -1,6 +1,6 @@
 class AppimageUrlAsset {
   static const String rootImages = "assets/image";
-   static const String rootLottie = "assets/lottie";
+  static const String rootLottie = "assets/lottie";
 
   static const String arrow = "$rootImages/arrow.png";
   static const String avatar = "$rootImages/avatar.png";
@@ -18,21 +18,15 @@ class AppimageUrlAsset {
   static const String recent = "$rootImages/recent.png";
   static const String search = "$rootImages/search.png";
 
-   static const String logoMap = "$rootImages/charging_station.png";
+  static const String logoMap = "$rootImages/charging_station.png";
 
-   static const String chargingstationlogo = "$rootImages/chargingstationlogo.jpg";
+  static const String chargingstationlogo =
+      "$rootImages/ic_launcher_foreground.png";
 
-    static const String loading = "$rootLottie/loading.json";
+  static const String loading = "$rootLottie/loading.json";
   static const String offline = "$rootLottie/offline.json";
   static const String noData = "$rootLottie/nodata.json";
   static const String server = "$rootLottie/server.json";
 
-
   static const String logo = "$rootImages/Exiir.png";
-
-
-
-  
-
-
 }

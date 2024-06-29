@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ExiirEV/Core/Functions/helper.dart';
 
 class SearchMenuWidget extends StatelessWidget {
-  final double ?currentSearchPercent;
+  final double? currentSearchPercent;
 
-  const SearchMenuWidget({ Key ?key,  this.currentSearchPercent}) : super(key: key);
+  const SearchMenuWidget({Key? key, this.currentSearchPercent})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

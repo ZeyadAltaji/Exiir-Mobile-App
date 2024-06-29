@@ -14,7 +14,7 @@ class MapButton extends StatelessWidget {
   final Color? iconColor;
   final bool? isRight;
   final Gradient? gradient;
-final Function? onTap;
+  final Function? onTap;
   const MapButton({
     Key? key,
     this.currentSearchPercent,
@@ -50,7 +50,7 @@ final Function? onTap;
       child: Opacity(
         opacity: 1 - (currentSearchPercent! + currentExplorePercent!),
         child: GestureDetector(
-          onTap: onTap as void Function()?,  // Add this line
+          onTap: onTap as void Function()?, // Add this line
           child: Container(
             width: realW(width!),
             height: realH(height!),
@@ -73,8 +73,7 @@ final Function? onTap;
                       topRight: Radius.circular(realW(36))),
               boxShadow: [
                 BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.3),
-                    blurRadius: realW(36)),
+                    color: Color.fromRGBO(0, 0, 0, 0.3), blurRadius: realW(36)),
               ],
             ),
           ),

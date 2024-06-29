@@ -12,22 +12,24 @@ class SplashScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _SplashScreen();
 }
 
-class _SplashScreen extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreen extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
-    super.initState();   
+    super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Get.off(() => HomePage());
-    }); 
+    });
   }
-  
+
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final translationController = Get.put(TranslationController());
@@ -37,12 +39,11 @@ class _SplashScreen extends State<SplashScreen> with SingleTickerProviderStateMi
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Appcolors.logotwo, Appcolors.logoone],
-            begin: Alignment.centerRight,
-            end: Alignment.centerLeft
-          ),
+              colors: [Appcolors.logotwo, Appcolors.logoone],
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft),
         ),
-         child: Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
@@ -52,18 +53,16 @@ class _SplashScreen extends State<SplashScreen> with SingleTickerProviderStateMi
               fit: BoxFit.cover,
             ),
             const SizedBox(height: 20),
-           Text(
+            Text(
               translationController.getLanguage(1),
               style: const TextStyle(
-               fontStyle:  FontStyle.italic,
-                color: Appcolors.white,
-                fontSize: 32
-              ),
-            ) 
-           ],
+                  fontStyle: FontStyle.italic,
+                  color: Appcolors.white,
+                  fontSize: 32),
+            )
+          ],
         ),
       ),
-    );  
+    );
   }
 }
- 

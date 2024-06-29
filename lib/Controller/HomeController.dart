@@ -9,21 +9,21 @@ import 'package:ExiirEV/Core/Functions/calculateDistance.dart';
 import 'package:ExiirEV/Model/ChargingStations.dart';
 import 'package:ExiirEV/Model/StationsModels.dart';
 import 'package:ExiirEV/Views/Widget/details_content_widget.dart';
-import 'package:ExiirEV/Views/Widget/explore_content_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sizer_pro/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Core/Class/StatusRequest.dart';
- 
-
 
 class HomeController extends BaseController {
   final translationController = Get.put(TranslationController());
-    double offsetExplore = 0.0;
+  double offsetExplore = 0.0;
 
-   double get currentExplorePercent => max(0.0, min(1.0, offsetExplore / (760.0 - 122.0)));
+  double get currentExplorePercent =>
+      max(0.0, min(1.0, offsetExplore / (760.0 - 122.0)));
   final RxSet<Marker> markers = <Marker>{}.obs;
   final RxList<StationsModels> stations = <StationsModels>[].obs;
   late Rx<LatLng> center = LatLng(31.999360418399394, 35.88007842069041).obs;
@@ -31,29 +31,27 @@ class HomeController extends BaseController {
   final Map<String, double> stationDistances = {};
   Request request = Get.find();
 
-
   List<ChargingStations> chargingStations = [];
-
 
   @override
   void onInit() async {
     super.onInit();
     creatMarkers();
-    updateUserLocation();  
+    updateUserLocation();
   }
-  
+
   Future<void> creatMarkers() async {
-  await fetchChargingStations();
+    await fetchChargingStations();
 
     stations.clear();
     stations.addAll(chargingStations.map((station) => StationsModels(
-          stationsName: translationController.Translate(station.csNameAr!, station.csName!),
+          stationsName: translationController.Translate(
+              station.csNameAr!, station.csName!),
           stationsPhone: station.csPhone,
           x: station.csLatitude.toString(),
           y: station.csLangtitude.toString(),
           address: station.csAddress,
           available: Random().nextBool(),
-
         )));
 
     sortStationsByDistance();
@@ -71,45 +69,68 @@ class HomeController extends BaseController {
               double.parse(stations[i].y.toString())),
           icon: await getCustomerMarkerIcon(),
           infoWindow: InfoWindow(
-            title: stations[i].stationsName.toString(),
-            snippet: '${distance.toStringAsFixed(2)} ${translationController.getLanguage(60)}',
-             onTap: () {
-            showme(Get.context!, stations[i], distance);
-             }
-          ),
-         
+              title: stations[i].stationsName.toString(),
+              snippet:
+                  '${distance.toStringAsFixed(2)} ${translationController.getLanguage(60)}',
+              onTap: () {
+                showDetail(Get.context!, stations[i], distance);
+              }),
         ),
       );
     }
   }
-void showme(BuildContext context, StationsModels station, double distance) {
+
+  void showDetail(
+      BuildContext context, StationsModels station, double distance) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-           return DetailsContentWidget(station: station, distance: distance);
-
+        return Sizer(
+          builder: (context, orientation, deviceType) {
+            return ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                child:
+                    DetailsContentWidget(station: station, distance: distance),
+              ),
+            );
+          },
+        );
       },
     );
   }
- 
+
+  //  return ClipRRect(
+  //           borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
+  //           child: Container(
+  //             height: double.infinity, // Set the desired height here
+  //             width: double.infinity,
+  //             child: DetailsContentWidget(station: station, distance: distance),
+  //           ),
+  //         );
   Future<BitmapDescriptor> getCustomerMarkerIcon() async {
-    final String assetPath = AppimageUrlAsset.logoMap;
-    const ImageConfiguration imageConfig = ImageConfiguration(size: Size(1,1), devicePixelRatio: 0.2);
+     String assetPath = AppimageUrlAsset.logoMap;
+    const ImageConfiguration imageConfig =
+        ImageConfiguration(size: Size(1, 1), devicePixelRatio: 0.2);
     return BitmapDescriptor.fromAssetImage(imageConfig, assetPath);
   }
- Future<void> findNearestStationAndMove() async  {
-  sortStationsByDistance();
 
-  if (stations.isNotEmpty) {
-    final nearestStation = stations.first;
+  Future<void> findNearestStationAndMove() async {
+    sortStationsByDistance();
 
-    await mapController?.animateCamera(
-      CameraUpdate.newLatLng(
-        LatLng(double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
-      ),
-    );
+    if (stations.isNotEmpty) {
+      final nearestStation = stations.first;
+
+      await mapController?.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(
+              double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
+        ),
+      );
+    }
   }
-}
 
   Future<void> updateUserLocation() async {
     getUserCurrentLocation().then((value) async {
@@ -141,36 +162,38 @@ void showme(BuildContext context, StationsModels station, double distance) {
   }
 
   Future<Position> getUserCurrentLocation() async {
-  await Geolocator.requestPermission().then((value) {}).onError((error, stackTrace) async {
-    await Geolocator.requestPermission();
-    print("ERROR: " + error.toString());
-  });
-  return await Geolocator.getCurrentPosition();
-}
-  
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR: " + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
+  }
+
   void zoomIn() {
     mapController?.animateCamera(CameraUpdate.zoomIn());
   }
+
   void zoomOut() {
     mapController?.animateCamera(CameraUpdate.zoomOut());
   }
+
   void findNearestStation() {
-   sortStationsByDistance();
-  
-   if (stations.isNotEmpty) {
-    final nearestStation = stations.first;
-    
-     mapController?.animateCamera(
-      CameraUpdate.newLatLng(
-        LatLng(double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
-      ),
-    );
-    
-   }
-}
-  void moveToSearchPage() {
-    Get.toNamed('/SearchPage');
+    sortStationsByDistance();
+
+    if (stations.isNotEmpty) {
+      final nearestStation = stations.first;
+
+      mapController?.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(
+              double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
+        ),
+      );
+    }
   }
+
   void sortStationsByDistance() {
     stations.sort((a, b) {
       final distanceA = calculateDistance(
@@ -186,24 +209,43 @@ void showme(BuildContext context, StationsModels station, double distance) {
       return distanceA.compareTo(distanceB);
     });
   }
+
   fetchChargingStations() async {
     statusRequest = StatusRequest.loading;
     update();
 
-    var response = await request.postdata('ExiirManagementAPI/ChargingStationsInfo');
+    var response =
+        await request.postdata('ExiirManagementAPI/ChargingStationsInfo');
 
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
       var data = response.fold((l) => null, (r) => r);
       if (data != null) {
-        chargingStations = (data as List).map((item) => ChargingStations.fromJson(item)).toList();
+        chargingStations = (data as List)
+            .map((item) => ChargingStations.fromJson(item))
+            .toList();
       }
     }
 
     update();
-     
-
   }
- 
 
+  void launchDirections(double lat, double lng) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
+
+  void launchPhone(String phoneNumber) async {
+    String url = 'tel:$phoneNumber';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }

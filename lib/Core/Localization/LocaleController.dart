@@ -4,38 +4,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 import '../Constant/AppTheme.dart';
 
-class LocaleController extends BaseController{
-    Locale? language;
-    MyServices myServices = Get.find();
-    ThemeData appTheme = ThemeEn;
-    changeLang(String langcode) {
-    Locale locale = Locale(langcode) ; 
-    myServices.sharedPreferences.setString("lang", langcode) ; 
+class LocaleController extends BaseController {
+  Locale? language;
+  MyServices myServices = Get.find();
+  ThemeData appTheme = ThemeEn;
+  changeLang(String langcode) {
+    Locale locale = Locale(langcode);
+    myServices.sharedPreferences.setString("lang", langcode);
     appTheme = langcode == 'ar' ? ThemeAr : ThemeEn;
     Get.changeTheme(appTheme);
-    Get.updateLocale(locale) ; 
+    Get.updateLocale(locale);
   }
+
   @override
-  void onInit(){
-    String ? GetLang = myServices.sharedPreferences.getString('lang');
-    if(GetLang == 'ar')
-    {
-      language = const Locale('ar'); 
+  void onInit() {
+    String? GetLang = myServices.sharedPreferences.getString('lang');
+    if (GetLang == 'ar') {
+      language = const Locale('ar');
       appTheme = ThemeAr;
-    }
-    else if (GetLang == 'en') {
+    } else if (GetLang == 'en') {
       language = const Locale('en');
       appTheme = ThemeEn;
-    }
-    else {
-      language =  const Locale('ar') ; 
+    } else {
+      language = const Locale('ar');
       appTheme = ThemeAr;
-
     }
     Get.updateLocale(language!);
-    super.onInit(); 
+    super.onInit();
   }
 }

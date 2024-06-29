@@ -10,19 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await initialServices();
-    Get.put(LocaleController());
-    Get.put(ConnectivityController());
-    Get.put(TranslationController());
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await initialServices();
+  Get.put(LocaleController());
+  Get.put(ConnectivityController());
+  Get.put(TranslationController());
 
   await EasyLocalization.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   final TranslationController translationController = Get.find();
   await translationController.fetchLanguage();
   await translationController.fetchMessages();
-  runApp( const  MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,15 +29,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        LocaleController controller = Get.put(LocaleController());
-        return GetMaterialApp(
-          locale: controller.language,
-          debugShowCheckedModeBanner: false,
-          theme: controller.appTheme ,
-          initialBinding: InitialBindings(),
-          getPages: routes,
-
-        );
+    LocaleController controller = Get.put(LocaleController());
+    return GetMaterialApp(
+      locale: controller.language,
+      debugShowCheckedModeBanner: false,
+      theme: controller.appTheme,
+      initialBinding: InitialBindings(),
+      getPages: routes,
+    );
   }
 }
 
@@ -46,6 +44,7 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

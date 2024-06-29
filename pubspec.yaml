@@ -27,6 +27,8 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   shared_preferences: ^2.2.3
   sizer_pro: ^2.2.0
+  google_fonts: ^6.2.1
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -71,9 +73,9 @@ flutter_launcher_icons:
   image_path_ios: "assets/image/ic_launcher.png"
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
-  adaptive_icon_background: "assets/image/ic_launcher.png" # only available for Android 8.0 devices and above
-  adaptive_icon_foreground: "assets/image/ic_launcher.png" # only available for Android 8.0 devices and above
-  adaptive_icon_monochrome: "assets/image/ic_launcher.png" # only available for Android 13 devices and above
+  # adaptive_icon_background: "assets/image/ic_launcher.png" # only available for Android 8.0 devices and above
+  # adaptive_icon_foreground: "assets/image/ic_launcher.png" # only available for Android 8.0 devices and above
+  # adaptive_icon_monochrome: "assets/image/ic_launcher.png" # only available for Android 13 devices and above
   min_sdk_android: 21 
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
