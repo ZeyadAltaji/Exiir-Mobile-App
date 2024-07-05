@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "929841144714",
+    "project_id": "exiir-ev",
+    "storage_bucket": "exiir-ev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929841144714:android:b1a03dab6b98dd73255e73",
+        "android_client_info": {
+          "package_name": "com.example.ExiirEV"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929841144714-4l6cr4tfb2cu3h7a730etnsatav0vnb0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ExiirEV",
+            "certificate_hash": "57167aee5943365ccab6fddc2720f0db9bf804f1"
+          }
+        },
+        {
+          "client_id": "929841144714-g5b5ukbu5gk3n48r77u2ufsc2sg9djvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ3Q8cbCtnrlOfsJkHkkPU3Cibu9tPFn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929841144714-g5b5ukbu5gk3n48r77u2ufsc2sg9djvm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

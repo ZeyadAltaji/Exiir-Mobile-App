@@ -172,13 +172,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               mapType: mapType,
               initialCameraPosition: CameraPosition(
                 target: controller.center.value,
-                zoom: 20,
+                zoom: 18.0,
               ),
               markers: Set<Marker>.of(controller.markers),
               onMapCreated: (GoogleMapController mapController) {
                 controller.mapController = mapController;
               },
               zoomControlsEnabled: false,
+              myLocationEnabled: false,
+              myLocationButtonEnabled: false,
+              zoomGesturesEnabled: false,
+                onCameraMove: controller.onCameraMove,
+
             ),
           ),
           ExploreWidget(
@@ -289,33 +294,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ],
               )),
-          //layer button
 
-          // if (isDropdownVisible)
-
-          //  Positioned(
-          //   right: 20,
-          //   top: 100,
-          //    child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.end,
-          //     children: [
-          //       ElevatedButton(
-          //         onPressed: () {
-          //           changeMapType(MapType.normal);
-          //         },
-          //         child: Text('Auto'),
-          //       ),
-          //       ElevatedButton(
-          //         onPressed: () {
-          //           changeMapType(MapType.satellite);
-          //         },
-          //         child: Text('Satellite'),
-          //       ),
-          //     ],
-
-          //    )
-
-          //  ),
           MapButton(
             currentExplorePercent: currentExplorePercent,
             currentSearchPercent: currentSearchPercent,
@@ -365,14 +344,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               },
               child: Opacity(
                 opacity: 1 - (currentSearchPercent + currentExplorePercent),
-                child: Container(
+                child:  Container(
                   width: realW(71),
                   height: realH(71),
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(left: realW(17)),
-                  child: Icon(
+                  child:  Icon( 
                     Icons.menu,
-                    size: realW(34),
+                    size:  realW(34),
                   ),
                   decoration: BoxDecoration(
                       color: Appcolors.white,

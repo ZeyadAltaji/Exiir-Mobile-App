@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ExiirEV/Controller/HomeController.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ExploreContentWidget extends StatelessWidget {
   final double currentExplorePercent;
@@ -31,14 +30,14 @@ class ExploreContentWidget extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: homeController.stations.map((station) {
-                  final distance = calculateDistance(
+                  calculateDistance(
                     homeController.center.value,
                     LatLng(double.parse(station.x ?? '0'),
                         double.parse(station.y ?? '0')),
                   );
 
                   return Padding(
-                    padding: EdgeInsets.only(bottom: 16.0),
+                    padding: const EdgeInsets.only(bottom: 16.0),
                     child: Opacity(
                       opacity: currentExplorePercent,
                       child: Transform.translate(
@@ -52,7 +51,7 @@ class ExploreContentWidget extends StatelessWidget {
                             border: Border.all(color: Appcolors.white),
                             borderRadius: BorderRadius.circular(18.0),
                           ),
-                          padding: EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -62,20 +61,16 @@ class ExploreContentWidget extends StatelessWidget {
                                   children: [
                                     Text(
                                       station.stationsName ??
-                                          '${translationController.getLanguage(62)}',
+                                          translationController.getLanguage(62),
                                       style: TextStyle(
                                           color: Appcolors.white,
                                           fontSize: realH(20)),
                                     ),
-                                    SizedBox(height: 8.0),
+                                    const SizedBox(height: 8.0),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // Text(
-                                        //   "Open from 6:00 AM to 7:00 PM",
-                                        //   style: TextStyle(color: Appcolors.white, fontSize: realH(15)),
-                                        // ),
                                         Text(
                                           "${translationController.getLanguage(16)}: ${station.address}",
                                           style: TextStyle(
@@ -83,18 +78,30 @@ class ExploreContentWidget extends StatelessWidget {
                                               fontSize: realH(15)),
                                         ),
                                         const SizedBox(height: 4.0),
-                                        Text(
-                                          station.available!
-                                              ? "${translationController.getLanguage(63)}"
-                                              : "${translationController.getLanguage(64)}",
-                                          style: TextStyle(
-                                            color: station.available!
-                                                ? Appcolors.green
-                                                : Appcolors.red,
-                                            fontSize: realH(15),
-                                            fontWeight: FontWeight.bold,
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            color: Appcolors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: Text(
+                                            station.available!
+                                                ? translationController
+                                                    .getLanguage(63)
+                                                : translationController
+                                                    .getLanguage(64),
+                                            style: TextStyle(
+                                              color: station.available!
+                                                  ? Appcolors.green
+                                                  : Appcolors.red,
+                                              fontSize: realH(15),
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
+
                                         // Text(
                                         //   "${translationController.getLanguage(17)}: ${station.stationsPhone ?? '${translationController.getLanguage(61)}'}",
                                         //   style: TextStyle(color: Appcolors.white, fontSize: realH(15)),
@@ -110,16 +117,16 @@ class ExploreContentWidget extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.phone,
+                                      icon: const Icon(Icons.phone,
                                           color: Appcolors.white),
                                       onPressed: () {
                                         homeController.launchPhone(
                                             station.stationsPhone ?? '');
                                       },
                                     ),
-                                    SizedBox(height: 8.0),
+                                    const SizedBox(height: 8.0),
                                     IconButton(
-                                      icon: Icon(Icons.directions,
+                                      icon: const Icon(Icons.directions,
                                           color: Appcolors.white),
                                       onPressed: () {
                                         homeController.launchDirections(

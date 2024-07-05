@@ -10,7 +10,7 @@ import '../Core/Constant/Environment.dart';
 
 class TranslationController extends BaseController {
   var Languages = <int, String>{}.obs;
-  var Messages = <String, String>{}.obs;
+  var Messages = <int, String>{}.obs;
 
   @override
   void onInit() {
@@ -36,7 +36,7 @@ class TranslationController extends BaseController {
         data.forEach((item) {
           Message Messagess = Message.fromJson(item);
           if (Messagess.Id != null) {
-            Messages[Messagess.Id!.toString()] =
+            Messages[Messagess.Id!] =
                 Get.locale?.languageCode == 'ar'
                     ? (Messagess.MsgAr ?? '')
                     : (Messagess.MsgEn ?? '');

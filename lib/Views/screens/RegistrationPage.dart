@@ -2,11 +2,15 @@ import 'package:ExiirEV/Controller/HomeController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Views/Widget/TextSignUp.dart';
+import 'package:ExiirEV/Views/Widget/custom_rounded_loading_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 
+import '../../Controller/AccountController.dart';
+ 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
 
@@ -22,6 +26,8 @@ class RegistrationPage extends StatelessWidget {
         RoundedLoadingButtonController();
     final RoundedLoadingButtonController phoneController =
         RoundedLoadingButtonController();
+            final accountController = Get.put(AccountControllerImp());
+
     // Check if the device is an iPhone
     bool isIPhone = Theme.of(context).platform == TargetPlatform.iOS;
 
@@ -59,7 +65,7 @@ class RegistrationPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 1),
                 Text(
-                  translationController.getLanguage(5).trim(), // login
+                  translationController.getLanguage(77).trim(), // Sign Up
                   style: const TextStyle(
                     fontStyle: FontStyle.italic,
                     color: Appcolors.white,
@@ -74,166 +80,60 @@ class RegistrationPage extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                RoundedLoadingButton(
-                  onPressed: () {
-                    // handleGoogleSignIn();
-                  },
+                CustomRoundedLoadingButton(
                   controller: googleController,
-                  successColor: Colors.red,
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  elevation: 0,
-                  borderRadius: 25,
-                  color: Colors.red,
-                  child: Wrap(
-                    children: [
-                      const Icon(
-                        FontAwesomeIcons.google, // donwload
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Text(translationController.getLanguage(72).trim(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // facebook login button
-                RoundedLoadingButton(
                   onPressed: () {
-                    // handleTwitterAuth();
+                    accountController.signUpWithGoogle();
                   },
+                  color: Appcolors.red,
+                  successColor: Appcolors.red,
+                  icon: FontAwesomeIcons.google,
+                  text: translationController.getLanguage(72).trim(),
+                ),
+                const SizedBox(height: 10),
+                CustomRoundedLoadingButton(
                   controller: facebookController,
-                  successColor: Colors.blue,
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  elevation: 0,
-                  borderRadius: 25,
-                  color: Colors.blue,
-                  child: Wrap(
-                    children: [
-                      const Icon(
-                        FontAwesomeIcons.facebook,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Text(translationController.getLanguage(73).trim(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                // twitter loading button
-                RoundedLoadingButton(
-                  onPressed: () {
-                    // handleTwitterAuth();
+                  onPressed: () async {
+                   await  accountController.signInWithFacebook();
                   },
-                  controller: twitterController,
-                  successColor: Colors.lightBlue,
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  elevation: 0,
-                  borderRadius: 25,
-                  color: Colors.lightBlue,
-                  child: Wrap(
-                    children: [
-                      const Icon(
-                        FontAwesomeIcons.twitter,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Text(translationController.getLanguage(74).trim(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
+                  color: Appcolors.blue,
+                  successColor: Appcolors.blue,
+                  icon: FontAwesomeIcons.facebook,
+                  text: translationController.getLanguage(73).trim(),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                // phoneAuth loading button
-                RoundedLoadingButton(
-                  onPressed: () {
-                    // nextScreenReplace(context, const PhoneAuthScreen());
-                    phoneController.reset();
-                  },
+                const SizedBox(height: 10),
+                
+                CustomRoundedLoadingButton(
                   controller: phoneController,
-                  successColor: Colors.black,
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  elevation: 0,
-                  borderRadius: 25,
-                  color: Colors.black,
-                  child: Wrap(
-                    children: [
-                      const Icon(
-                        FontAwesomeIcons.phone,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Text(translationController.getLanguage(75).trim(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
+                  onPressed: () {
+                    accountController.goToPhoneNumberPage();
+                   },
+                  color: Appcolors.Black,
+                  successColor: Appcolors.Black,
+                  icon: FontAwesomeIcons.phone,
+                  text: translationController.getLanguage(75).trim(),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 if (isIPhone)
-                  RoundedLoadingButton(
+                  CustomRoundedLoadingButton(
+                    controller: phoneController,
                     onPressed: () {
-                      // nextScreenReplace(context, const PhoneAuthScreen());
                       phoneController.reset();
                     },
-                    controller: phoneController,
-                    successColor: Colors.black,
-                    width: MediaQuery.of(context).size.width * 0.80,
-                    elevation: 0,
-                    borderRadius: 25,
-                    color: Colors.black,
-                    child: Wrap(
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.phone,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Text(translationController.getLanguage(76).trim(),
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    ),
+                    color: Appcolors.Black,
+                    successColor: Appcolors.Black,
+                    icon: FontAwesomeIcons.apple,
+                    text: translationController.getLanguage(76).trim(),
                   ),
+
+                const SizedBox(height: 30),
+                Textsignup(
+                  textone: translationController.getLanguage(79),
+                  textTow: translationController.getLanguage(5),
+                  onTap: () {
+                    accountController.GoToPageLoginPage();
+                  },
+                )
               ],
             ),
           ],

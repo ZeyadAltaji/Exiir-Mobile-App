@@ -285,7 +285,7 @@ class DetailsContentWidget extends StatelessWidget {
       extendBody: true,
       bottomSheet: Container(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.w),
-        decoration: BoxDecoration(color: Appcolors.white),
+        decoration: const BoxDecoration(color: Appcolors.white),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -298,30 +298,30 @@ class DetailsContentWidget extends StatelessWidget {
                         double.parse(station.y ?? '0'));
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                    padding:const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                     decoration: BoxDecoration(
                       color: Appcolors.blue,
                       borderRadius: BorderRadius.circular(5.w),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.directions,
                       color: Appcolors.white,
                       size: 20,
                     ),
                   ),
                 ),
-                SizedBox(width: 10), // Adjust spacing between buttons
+              const  SizedBox(width: 10), // Adjust spacing between buttons
                 GestureDetector(
                   onTap: () {
                     homeController.launchPhone(station.stationsPhone ?? '');
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                    padding:const  EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                     decoration: BoxDecoration(
                       color: Appcolors.blue,
                       borderRadius: BorderRadius.circular(5.w),
                     ),
-                    child: Icon(
+                    child:const Icon(
                       Icons.phone,
                       color: Appcolors.white,
                       size: 20,
@@ -332,25 +332,25 @@ class DetailsContentWidget extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Handle booking button tap
-              },
+                homeController.goToLoginPage();
+               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 decoration: BoxDecoration(
                   color: Appcolors.blue,
                   borderRadius: BorderRadius.circular(5.w),
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                   const Icon(
                       Icons.book,
                       color: Appcolors.white,
                       size: 20,
                     ),
-                    SizedBox(width: 5), // Adjust spacing between icon and text
+                const    SizedBox(width: 5), // Adjust spacing between icon and text
                     Text(
-                      'Booking',
-                      style: TextStyle(
+                      translationController.getLanguage(85),
+                      style:const TextStyle(
                         fontSize: 12,
                         color: Appcolors.white,
                       ),

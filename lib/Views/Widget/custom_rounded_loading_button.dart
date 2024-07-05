@@ -67,18 +67,18 @@ class CustomRoundedLoadingButton extends StatelessWidget {
         children: [
          
         
-          Text(
-            text,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
-          ),
-            const SizedBox(
-            width: 15,
-          ),
            Icon(
             icon,
             size: 20,
             color: Colors.white,
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          Text(
+            text,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
           ),
         ],
       ),

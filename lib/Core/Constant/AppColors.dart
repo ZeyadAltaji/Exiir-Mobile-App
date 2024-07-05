@@ -5,6 +5,7 @@ class Appcolors {
   static const Color primaryColor = Color(0xffe74c3c);
   static const Color Black = Colors.black;
   static const Color blue = Colors.blue;
+  static const Color lightBlue = Colors.lightBlue;
 
   static const Color green = Colors.green;
   static const Color grey2 = Color.fromARGB(255, 66, 66, 66);
@@ -19,4 +20,8 @@ class Appcolors {
 
   static const Color logoone = Color(0xff2b8dd3);
   static const Color logotwo = Color(0xff1d5f9f);
+
+static const Color kPrimaryColor = Color.fromRGBO(3, 120, 221, 1);
+static const Color kPrimaryColorShadow = Color.fromRGBO(3, 120, 221, .2);
+
 }

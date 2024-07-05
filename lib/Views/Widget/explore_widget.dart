@@ -1,7 +1,9 @@
+import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
 import 'package:ExiirEV/Core/Functions/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ExploreWidget extends StatelessWidget {
   final double? currentSearchPercent;
@@ -24,82 +26,164 @@ class ExploreWidget extends StatelessWidget {
       this.onVerticalDragUpdate,
       this.onPanDown})
       : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-        bottom: realH(-122 * currentSearchPercent!),
-        left: (screenWidth -
-                realW(159 + (standardWidth - 159) * currentExplorePercent!)) /
-            2,
-        child: GestureDetector(
-          onTap: () {
-            animateExplore!(!isExploreOpen!);
-          },
-          onVerticalDragUpdate: onVerticalDragUpdate,
-          onVerticalDragEnd: (_) {
-            _dispatchExploreOffset();
-          },
-          onPanDown: (_) => onPanDown!(),
-          child: Opacity(
-            opacity: 1 - currentSearchPercent!,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              width:
-                  realW(159 + (standardWidth - 159) * currentExplorePercent!),
-              height: realH(122 + (500 - 122) * currentExplorePercent!),
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-                    Appcolors.logotwo,
-                    Appcolors.logoone,
-                  ]),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                          realW(80 + (50 - 80) * currentExplorePercent!)),
-                      topRight: Radius.circular(
-                          realW(80 + (50 - 80) * currentExplorePercent!)))),
-              child: Stack(
-                children: [
-                  Positioned(
-                      top: realH(65 + (-5 * currentExplorePercent!)),
-                      left: realW(49 + (91 - 49) * currentExplorePercent!),
-                      child: Text(
-                        "Stations",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize:
-                                realW(18 + (32 - 18) * currentExplorePercent!)),
-                        textAlign: TextAlign.center,
-                      )),
-                  Positioned(
-                      top: realH(20 + (60 - 20) * currentExplorePercent!),
-                      left: realW(63 + (44 - 63) * currentExplorePercent!),
-                      child: Icon(
-                        Icons.location_on,
-                        size: realW(34),
-                        color: Colors.white,
-                      )),
-                  Positioned(
-                      top: realH(currentExplorePercent! < 0.9
-                          ? realH(-35)
-                          : realH(-35 +
-                              (6 + 35) * (currentExplorePercent! - 0.9) * 8)),
-                      left: realW(63 + (170 - 63) * currentExplorePercent!),
-                      child: GestureDetector(
-                        onTap: () {
-                          animateExplore!(false);
-                        },
-                        child: Image.asset(
-                          AppimageUrlAsset.arrow,
-                          width: realH(35),
-                          height: realH(35),
-                        ),
-                      )),
-                ],
+    final TranslationController translationController =
+        Get.put(TranslationController());
+
+    if (Get.locale!.languageCode == 'ar') {
+      return Positioned(
+          bottom: realH(-122 * currentSearchPercent!),
+          left: (screenWidth -
+                  realW(159 + (standardWidth - 159) * currentExplorePercent!)) /
+              2,
+          child: GestureDetector(
+            onTap: () {
+              animateExplore!(!isExploreOpen!);
+            },
+            onVerticalDragUpdate: onVerticalDragUpdate,
+            onVerticalDragEnd: (_) {
+              _dispatchExploreOffset();
+            },
+            onPanDown: (_) => onPanDown!(),
+            child: Opacity(
+              opacity: 1 - currentSearchPercent!,
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                width:
+                    realW(159 + (standardWidth - 159) * currentExplorePercent!),
+                height: realH(122 + (500 - 122) * currentExplorePercent!),
+                decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        colors: [
+                          Appcolors.logotwo,
+                          Appcolors.logoone,
+                        ]),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(
+                            realW(80 + (50 - 80) * currentExplorePercent!)),
+                        topRight: Radius.circular(
+                            realW(80 + (50 - 80) * currentExplorePercent!)))),
+                child: Stack(
+                  children: [
+                    Positioned(
+                        top: realH(65 + (-5 * currentExplorePercent!)),
+                        right: realW(49 + (91 - 49) * currentExplorePercent!),
+                        child: Text(
+                          translationController.getLanguage(89),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: realW(
+                                  18 + (32 - 18) * currentExplorePercent!)),
+                          textAlign: TextAlign.center,
+                        )),
+                    Positioned(
+                        top: realH(20 + (60 - 20) * currentExplorePercent!),
+                        right: realW(63 + (44 - 63) * currentExplorePercent!),
+                        child: Icon(
+                          Icons.location_on,
+                          size: realW(34),
+                          color: Colors.white,
+                        )),
+                    Positioned(
+                        top: realH(currentExplorePercent! < 0.9
+                            ? realH(-35)
+                            : realH(-35 +
+                                (6 + 35) * (currentExplorePercent! - 0.9) * 8)),
+                        right: realW(63 + (170 - 63) * currentExplorePercent!),
+                        child: GestureDetector(
+                          onTap: () {
+                            animateExplore!(false);
+                          },
+                          child: Image.asset(
+                            AppimageUrlAsset.arrow,
+                            width: realH(35),
+                            height: realH(35),
+                          ),
+                        )),
+                  ],
+                ),
               ),
             ),
-          ),
-        ));
+          ));
+    } else {
+      return Positioned(
+          bottom: realH(-122 * currentSearchPercent!),
+          left: (screenWidth -
+                  realW(159 + (standardWidth - 159) * currentExplorePercent!)) /
+              2,
+          child: GestureDetector(
+            onTap: () {
+              animateExplore!(!isExploreOpen!);
+            },
+            onVerticalDragUpdate: onVerticalDragUpdate,
+            onVerticalDragEnd: (_) {
+              _dispatchExploreOffset();
+            },
+            onPanDown: (_) => onPanDown!(),
+            child: Opacity(
+              opacity: 1 - currentSearchPercent!,
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                width:
+                    realW(159 + (standardWidth - 159) * currentExplorePercent!),
+                height: realH(122 + (500 - 122) * currentExplorePercent!),
+                decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        colors: [
+                          Appcolors.logotwo,
+                          Appcolors.logoone,
+                        ]),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(
+                            realW(80 + (50 - 80) * currentExplorePercent!)),
+                        topRight: Radius.circular(
+                            realW(80 + (50 - 80) * currentExplorePercent!)))),
+                child: Stack(
+                  children: [
+                    Positioned(
+                        top: realH(65 + (-5 * currentExplorePercent!)),
+                        left: realW(49 + (91 - 49) * currentExplorePercent!),
+                        child: Text(
+                          translationController.getLanguage(89),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: realW(
+                                  18 + (32 - 18) * currentExplorePercent!)),
+                          textAlign: TextAlign.center,
+                        )),
+                    Positioned(
+                        top: realH(20 + (60 - 20) * currentExplorePercent!),
+                        left: realW(63 + (44 - 63) * currentExplorePercent!),
+                        child: Icon(
+                          Icons.location_on,
+                          size: realW(34),
+                          color: Colors.white,
+                        )),
+                    Positioned(
+                        top: realH(currentExplorePercent! < 0.9
+                            ? realH(-35)
+                            : realH(-35 +
+                                (6 + 35) * (currentExplorePercent! - 0.9) * 8)),
+                        left: realW(63 + (170 - 63) * currentExplorePercent!),
+                        child: GestureDetector(
+                          onTap: () {
+                            animateExplore!(false);
+                          },
+                          child: Image.asset(
+                            AppimageUrlAsset.arrow,
+                            width: realH(35),
+                            height: realH(35),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ));
+    }
   }
 
   /// dispatch Explore state
