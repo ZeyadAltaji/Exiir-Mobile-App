@@ -4,6 +4,7 @@ import 'package:ExiirEV/Controller/BaseController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Class/Request.dart';
 import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Core/Functions/Handingdata.dart';
 import 'package:ExiirEV/Core/Functions/calculateDistance.dart';
 import 'package:ExiirEV/Model/ChargingStations.dart';
@@ -55,7 +56,6 @@ class HomeController extends BaseController {
         )));
 
     sortStationsByDistance();
-    // findNearestStationAndMove();
     for (int i = 0; i < stations.length; i++) {
       final station = stations[i];
       final distance = calculateDistance(
@@ -80,6 +80,112 @@ class HomeController extends BaseController {
     }
   }
 
+  Future<BitmapDescriptor> getCustomerMarkerIcon() async {
+    String assetPath = AppimageUrlAsset.logoMap;
+    const ImageConfiguration imageConfig =
+        ImageConfiguration(size: Size(1, 1), devicePixelRatio: 0.2);
+    return BitmapDescriptor.fromAssetImage(imageConfig, assetPath);
+  }
+
+  fetchChargingStations() async {
+    statusRequest = StatusRequest.loading;
+    update();
+
+    var response =
+        await request.postdata('ExiirManagementAPI/ChargingStationsInfo');
+
+    statusRequest = handlingData(response);
+    if (statusRequest == StatusRequest.success) {
+      var data = response.fold((l) => null, (r) => r);
+      if (data != null) {
+        chargingStations = (data as List)
+            .map((item) => ChargingStations.fromJson(item))
+            .toList();
+      }
+    }
+
+    update();
+  }
+
+  void sortStationsByDistance() {
+    stations.sort((a, b) {
+      final distanceA = calculateDistance(
+        center.value,
+        LatLng(double.parse(a.x ?? '0'), double.parse(a.y ?? '0')),
+      );
+      final distanceB = calculateDistance(
+        center.value,
+        LatLng(double.parse(b.x ?? '0'), double.parse(b.y ?? '0')),
+      );
+      stationDistances[a.stationsName!] = distanceA;
+      stationDistances[b.stationsName!] = distanceB;
+      return distanceA.compareTo(distanceB);
+    });
+  }
+
+  Future<void> updateUserLocation() async {
+    getUserCurrentLocation().then((value) async {
+      center.value = LatLng(31.999360418399394, 35.88007842069041);
+      markers.add(
+        const Marker(
+          markerId: MarkerId('موقع المستخدم'),
+          position: LatLng(31.999360418399394, 35.88007842069041),
+          infoWindow: InfoWindow(
+            title: 'موقع المستخدم',
+            snippet: 'هنا أنا!',
+          ),
+        ),
+      );
+      sortStationsByDistance();
+      StationsModels? nearestStation = GetNearestStations();
+      if (nearestStation != null) {
+        LatLng nearestStationLocation = LatLng(
+          double.parse(nearestStation.x!),
+          double.parse(nearestStation.y!),
+        );
+
+        if (mapController != null) {
+          mapController!.animateCamera(
+            CameraUpdate.newLatLng(nearestStationLocation),
+          );
+        }
+      }
+
+      update();
+    });
+  }
+
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR: " + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
+  }
+
+  StationsModels? GetNearestStations() {
+    if (stations.isEmpty) return null;
+
+    StationsModels? nearestStation;
+    double nearestDistance = double.infinity;
+
+    for (var station in stations) {
+      final distance = calculateDistance(
+        center.value,
+        LatLng(double.parse(station.x ?? '0'), double.parse(station.y ?? '0')),
+      );
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestStation = station;
+      }
+    }
+
+    return nearestStation;
+  }
+
   void showDetail(
       BuildContext context, StationsModels station, double distance) {
     showModalBottomSheet(
@@ -100,75 +206,6 @@ class HomeController extends BaseController {
         );
       },
     );
-  }
-
-  //  return ClipRRect(
-  //           borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
-  //           child: Container(
-  //             height: double.infinity, // Set the desired height here
-  //             width: double.infinity,
-  //             child: DetailsContentWidget(station: station, distance: distance),
-  //           ),
-  //         );
-  Future<BitmapDescriptor> getCustomerMarkerIcon() async {
-     String assetPath = AppimageUrlAsset.logoMap;
-    const ImageConfiguration imageConfig =
-        ImageConfiguration(size: Size(1, 1), devicePixelRatio: 0.2);
-    return BitmapDescriptor.fromAssetImage(imageConfig, assetPath);
-  }
-
-  Future<void> findNearestStationAndMove() async {
-    sortStationsByDistance();
-
-    if (stations.isNotEmpty) {
-      final nearestStation = stations.first;
-
-      await mapController?.animateCamera(
-        CameraUpdate.newLatLng(
-          LatLng(
-              double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
-        ),
-      );
-    }
-  }
-
-  Future<void> updateUserLocation() async {
-    getUserCurrentLocation().then((value) async {
-      center.value = LatLng(31.999360418399394, 35.88007842069041);
-      markers.add(
-        Marker(
-          markerId: MarkerId('موقع المستخدم'),
-          position: LatLng(31.999360418399394, 35.88007842069041),
-          infoWindow: InfoWindow(
-            title: 'موقع المستخدم',
-            snippet: 'هنا أنا!',
-          ),
-        ),
-      );
-      sortStationsByDistance();
-
-      // Move the camera to the user's current location
-      if (mapController != null) {
-        mapController!.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(31.999360418399394, 35.88007842069041),
-              zoom: 20.0,
-            ),
-          ),
-        );
-      }
-    });
-  }
-
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission()
-        .then((value) {})
-        .onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-      print("ERROR: " + error.toString());
-    });
-    return await Geolocator.getCurrentPosition();
   }
 
   void zoomIn() {
@@ -194,42 +231,6 @@ class HomeController extends BaseController {
     }
   }
 
-  void sortStationsByDistance() {
-    stations.sort((a, b) {
-      final distanceA = calculateDistance(
-        center.value,
-        LatLng(double.parse(a.x ?? '0'), double.parse(a.y ?? '0')),
-      );
-      final distanceB = calculateDistance(
-        center.value,
-        LatLng(double.parse(b.x ?? '0'), double.parse(b.y ?? '0')),
-      );
-      stationDistances[a.stationsName!] = distanceA;
-      stationDistances[b.stationsName!] = distanceB;
-      return distanceA.compareTo(distanceB);
-    });
-  }
-
-  fetchChargingStations() async {
-    statusRequest = StatusRequest.loading;
-    update();
-
-    var response =
-        await request.postdata('ExiirManagementAPI/ChargingStationsInfo');
-
-    statusRequest = handlingData(response);
-    if (statusRequest == StatusRequest.success) {
-      var data = response.fold((l) => null, (r) => r);
-      if (data != null) {
-        chargingStations = (data as List)
-            .map((item) => ChargingStations.fromJson(item))
-            .toList();
-      }
-    }
-
-    update();
-  }
-
   void launchDirections(double lat, double lng) async {
     String googleUrl =
         'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
@@ -247,5 +248,9 @@ class HomeController extends BaseController {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  GoToPageLoginPage() {
+    Get.to(AppRoutes.LoginPage);
   }
 }
