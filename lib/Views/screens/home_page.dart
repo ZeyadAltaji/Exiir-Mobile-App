@@ -17,7 +17,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -126,7 +129,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void animateMenu(bool open) {
     animationControllerMenu =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+        AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
     curve =
         CurvedAnimation(parent: animationControllerMenu, curve: Curves.ease);
     animation =
@@ -192,7 +195,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             animateExplore: animateExplore,
             isExploreOpen: isExploreOpen,
             onVerticalDragUpdate: onExploreVerticalUpdate,
-            onPanDown: () => animationControllerExplore?.stop(),
+            onPanDown: () => animationControllerExplore.stop(),
           ),
           offsetSearch != 0
               ? BackdropFilter(
@@ -248,7 +251,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             isSearchOpen: isSearchOpen,
             animateSearch: animateSearch,
             onHorizontalDragUpdate: onSearchHorizontalDragUpdate,
-            onPanDown: () => animationControllerSearch?.stop(),
+            onPanDown: () => animationControllerSearch.stop(),
           ),
           //search back
           SearchBackWidget(
@@ -268,14 +271,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             changeMapType(MapType.satellite);
                           },
                           mini: true,
-                          child: Icon(Icons.satellite),
+                          child:const Icon(Icons.satellite),
                         ),
                         FloatingActionButton(
                           onPressed: () {
                             changeMapType(MapType.normal);
                           },
                           mini: true,
-                          child: Icon(Icons.layers),
+                          child:const Icon(Icons.layers),
                         ),
                       ],
                     ),
@@ -360,7 +363,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           topRight: Radius.circular(realW(36))),
                       boxShadow: [
                         BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.3),
+                            color: const Color.fromRGBO(0, 0, 0, 0.3),
                             blurRadius: realW(36)),
                       ]),
                 ),

@@ -14,7 +14,6 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translationController = Get.put(TranslationController());
-    final GlobalKey _scaffoldKey = GlobalKey<ScaffoldState>();
     final accountController = Get.put(AccountControllerImp());
 
     // Check if the device is an iPhone

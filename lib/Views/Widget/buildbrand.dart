@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:ExiirEV/Controller/ModelsController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/Environment.dart';
@@ -59,7 +58,7 @@ Widget buildbrand(Brands brand, int index, Size size, double crossAxisSpacing,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding:const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             ),
             child: Text(
               translationController.getLanguage(88),

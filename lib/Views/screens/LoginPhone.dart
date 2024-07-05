@@ -55,7 +55,7 @@ class _LoginPhoneState extends State<LoginPhone> {
                 const SizedBox(height: 25),
                 Text(
                   translationController.getLanguage(1).trim(),
-                  style: TextStyle(
+                  style:const TextStyle(
                     fontSize: 28,
                     color: Appcolors.white,
                   ),
@@ -63,7 +63,7 @@ class _LoginPhoneState extends State<LoginPhone> {
                 const SizedBox(height: 5),
                 Text(
                   translationController.getLanguage(70),
-                  style: TextStyle(
+                  style:const TextStyle(
                     fontSize: 20,
                     color: Appcolors.white,
                   ),

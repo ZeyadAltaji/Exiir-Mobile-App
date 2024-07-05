@@ -1,10 +1,7 @@
-import 'package:ExiirEV/Controller/HomeController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
-import '../base/card_stations.dart';
 
 class SerchPage extends StatelessWidget {
   const SerchPage({
@@ -28,7 +25,7 @@ class SerchPage extends StatelessWidget {
               child: TextFormField(
                 // controller: _controller,
                 decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.search),
+                  suffixIcon: const Icon(Icons.search),
                   labelText: 'Serch',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40.0),

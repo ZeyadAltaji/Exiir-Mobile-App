@@ -1,4 +1,3 @@
-import 'package:ExiirEV/Controller/HomeController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
@@ -17,8 +16,7 @@ class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translationController = Get.put(TranslationController());
-    final GlobalKey _scaffoldKey = GlobalKey<ScaffoldState>();
-    final RoundedLoadingButtonController googleController =
+     final RoundedLoadingButtonController googleController =
         RoundedLoadingButtonController();
     final RoundedLoadingButtonController facebookController =
         RoundedLoadingButtonController();

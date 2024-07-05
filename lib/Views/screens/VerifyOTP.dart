@@ -44,7 +44,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_remainingTime > 0) {
           _remainingTime--;
@@ -119,7 +119,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 if (!_timerExpired && !_otpError)
                   Column(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 55,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

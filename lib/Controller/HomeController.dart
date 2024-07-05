@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 import 'package:ExiirEV/Controller/BaseController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Class/Request.dart';
-import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Core/Functions/Handingdata.dart';
 import 'package:ExiirEV/Core/Functions/calculateDistance.dart';
@@ -236,7 +235,7 @@ class HomeController extends BaseController {
   }
 
   void goToLoginPage() {
-    Get.to(AppRoutes.LoginPage);
+    Get.toNamed(AppRoutes.LoginPage);
   }
 
   Future<BitmapDescriptor> _createCustomMarkerIcon(
@@ -250,9 +249,6 @@ class HomeController extends BaseController {
     final Size size = Size(markerSize, markerSize);
 
     final Paint paint = Paint();
-    final TextPainter textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
 
     paint.color = Colors.blue;
     canvas.drawCircle(
