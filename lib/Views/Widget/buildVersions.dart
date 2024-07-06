@@ -3,55 +3,53 @@ import 'dart:ui';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/Environment.dart';
-import 'package:ExiirEV/Model/Brands.dart';
-import 'package:ExiirEV/Views/screens/ModelsPage.dart';
+import 'package:ExiirEV/Model/Models.dart';
+import 'package:ExiirEV/Model/Versions.dart';
+import 'package:ExiirEV/Views/screens/BookingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget buildbrand(Brands brand, int index, Size size, double crossAxisSpacing,
+Widget buildVersions(Versions versions, int? index, Size? size, double crossAxisSpacing,
     double mainAxisSpacing) {
   final translationController = Get.put(TranslationController());
 
   return Container(
-    decoration: const BoxDecoration(
+    decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.all(
-        Radius.circular(15),
-      ),
+      borderRadius: BorderRadius.circular(15),
     ),
-    padding: EdgeInsets.all(size.width * 0.04),
-    width: size.width * 0.5,
+    padding: EdgeInsets.all(size!.width * 0.04),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        SizedBox(
-          height: size.height * 0.12,
-          child: Center(
-            child: Hero(
-              tag: brand.brId!,
-              child: Image.network(
-                '${Environment.imageUrl}/${brand.brLogo}',
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: size.height * 0.01),
+        // SizedBox(
+        //   height: size.height * 0.12,
+        //   child: Center(
+        //     child: Hero(
+        //       tag: models.moId!,
+        //       child: Image.network(
+        //          '${Environment.imageUrl}/${models.moLogo}',
+        //         fit: BoxFit.fitWidth,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+         SizedBox(height: size.height * 0.01),
         Text(
-          translationController.Translate(brand.brNameAr!, brand.brName!),
+          translationController.Translate(versions.veName!, versions.veName!),
           style: TextStyle(
             fontSize: size.width * 0.04,
             fontWeight: FontWeight.bold,
             height: 1,
           ),
         ),
-        SizedBox(height: size.height * 0.001),
+          SizedBox(height: size.height * 0.001),
         const Spacer(),
         Align(
           alignment: Alignment.bottomLeft,
           child: ElevatedButton(
             onPressed: () {
-              Get.to(() => ModelsPage(), arguments: brand.brId);
+                    Get.to(() => BookingPage());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Appcolors.kPrimaryColorShadow,
@@ -74,3 +72,4 @@ Widget buildbrand(Brands brand, int index, Size size, double crossAxisSpacing,
     ),
   );
 }
+

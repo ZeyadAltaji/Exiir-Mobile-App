@@ -1,18 +1,20 @@
+import 'package:ExiirEV/Controller/VersionsController.dart';
+import 'package:ExiirEV/Core/Constant/routes.dart';
+import 'package:ExiirEV/Views/Widget/buildVersions.dart';
+import 'package:ExiirEV/Views/screens/BookingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ExiirEV/Controller/ModelsController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
-import 'package:ExiirEV/Views/Widget/buildModels.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 
-class ModelsPage extends StatelessWidget {
-  const ModelsPage({super.key});
+class VersionsPage extends StatelessWidget {
+  const VersionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ModelsController controller =
-        Get.put(ModelsController(brandId: Get.arguments));
+    final VersionsController controller =
+        Get.put(VersionsController(ModelId: Get.arguments));
     final TranslationController translationController =
         Get.put(TranslationController());
     final size = MediaQuery.of(context).size;
@@ -66,7 +68,7 @@ class ModelsPage extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        translationController.getLanguage(90),
+                        translationController.getLanguage(91),
                         style: const TextStyle(
                           color: Appcolors.Black,
                           fontSize: 27,
@@ -87,7 +89,7 @@ class ModelsPage extends StatelessWidget {
                     textController.clear();
                     controller.searchText.value = '';
                   },
-                  helpText:  translationController.getLanguage(87),
+                  helpText: translationController.getLanguage(87),
                   searchIconColor: Appcolors.Black,
                   autoFocus: true,
                   closeSearchOnSuffixTap: true,
@@ -100,7 +102,7 @@ class ModelsPage extends StatelessWidget {
               ),
               Expanded(
                 child: Obx(
-                  () => controller.filteredModels.isEmpty
+                  () => controller.filteredVersions.isEmpty
                       ? Center(
                           child: Container(
                             width: size.width * 0.6,
@@ -129,23 +131,40 @@ class ModelsPage extends StatelessWidget {
                             mainAxisSpacing: mainAxisSpacing,
                             childAspectRatio: 1 / 1.47,
                           ),
-                           itemCount: controller.filteredModels.length,
+                           itemCount: controller.filteredVersions.length,
                             itemBuilder: (context, index) {
-                            final models = controller.filteredModels[index];
+                            final models = controller.filteredVersions[index];
                             return GestureDetector(
                               onTap: () {},
-                              child: buildModels(models, index, size, crossAxisSpacing, mainAxisSpacing),
+                              child: buildVersions(models, index, size, crossAxisSpacing, mainAxisSpacing),
                             );
                           },
-                            
+                         
                           ),
                         ),
                 ),
               ),
+                SizedBox(height: 20), 
+                 Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => BookingPage());
+
+                  },
+                  child: Text(
+                    translationController.getLanguage(92),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),// Adjust as needed
             ],
           ),
         ),
+      
       ),
+      
     );
+
   }
 }

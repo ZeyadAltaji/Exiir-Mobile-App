@@ -1,47 +1,47 @@
-import 'package:ExiirEV/Controller/BaseController.dart';
 import 'package:ExiirEV/Core/Class/Request.dart';
 import 'package:ExiirEV/Core/Class/StatusRequest.dart';
 import 'package:ExiirEV/Core/Functions/Handingdata.dart';
 import 'package:ExiirEV/Model/Models.dart';
+import 'package:ExiirEV/Model/Versions.dart';
 import 'package:get/get.dart';
 
-class ModelsController extends BaseController {
+class VersionsController extends GetxController {
 Request request = Get.find();
-  List<Models> lModels = [];
-  RxList<Models> filteredModels = <Models>[].obs;
+  List<Versions> lVersions = [];
+  RxList<Versions> filteredVersions = <Versions>[].obs;
   RxString searchText = ''.obs;
-  StatusRequest statusRequests = StatusRequest.loading;
-  int? brandId;
+  StatusRequest statusRequest = StatusRequest.loading;
+  int? ModelId;
 
-  ModelsController({required this.brandId});
+  VersionsController({required this.ModelId});
 
   @override
   void onInit() {
     super.onInit();
     fetchModels();
-    searchText.listen((value) => filterModels());
+    searchText.listen((value) => filterVersion());
   }
 
   fetchModels() async {
     statusRequest = StatusRequest.loading;
-    var response = await request.getData('ExiirManagementAPI/GetModelsById/$brandId');
+    var response = await request.getData('ExiirManagementAPI/GetVersionsByModelId/$ModelId');
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
       var data = response.fold((l) => null, (r) => r);
       if (data != null) {
-        lModels = (data as List).map((item) => Models.fromJson(item)).toList();
-        filterModels();
+        lVersions = (data as List).map((item) => Versions.fromJson(item)).toList();
+        filterVersion();
       }
     }
   }
 
-  void filterModels() {
+  void filterVersion() {
     if (searchText.value.isEmpty) {
-      filteredModels.assignAll(List.from(lModels));
+      filteredVersions.assignAll(List.from(lVersions));
     } else {
-      filteredModels.assignAll(lModels.where((models) {
-        final brNameLower = models.moName!.toLowerCase();
-        final brNameArLower = models.moNameAr!.toLowerCase();
+      filteredVersions.assignAll(lVersions.where((models) {
+        final brNameLower = models.veName!.toLowerCase();
+        final brNameArLower = models.veName!.toLowerCase();
         final searchLower = searchText.value.toLowerCase();
         return brNameLower.contains(searchLower) || brNameArLower.contains(searchLower);
       }).toList());

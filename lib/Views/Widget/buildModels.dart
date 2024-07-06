@@ -1,22 +1,23 @@
 import 'dart:ui';
 
 import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Constant/AppColors.dart';
+import 'package:ExiirEV/Core/Constant/Environment.dart';
 import 'package:ExiirEV/Model/Models.dart';
+import 'package:ExiirEV/Views/screens/VersionsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget buildModels(Models models, [int? index, Size? size]) {
+Widget buildModels(Models models, int? index, Size? size, double crossAxisSpacing,
+    double mainAxisSpacing) {
   final translationController = Get.put(TranslationController());
 
   return Container(
-    decoration: const BoxDecoration(
+    decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.all(
-        Radius.circular(15),
-      ),
+      borderRadius: BorderRadius.circular(15),
     ),
     padding: EdgeInsets.all(size!.width * 0.04),
-    width: size.width * 0.5,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -26,36 +27,48 @@ Widget buildModels(Models models, [int? index, Size? size]) {
             child: Hero(
               tag: models.moId!,
               child: Image.network(
-                'https://res.cloudinary.com/dk5eekms5/image/upload/v1681947361/a55buce4haifci2aarcb.jpg',
+                 '${Environment.imageUrl}/${models.moLogo}',
                 fit: BoxFit.fitWidth,
               ),
             ),
           ),
         ),
-        SizedBox(height: size.height * 0.01),
-        // Text with button in a row
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                translationController.Translate(models.moNameAr!, models.moName!),
-                style: TextStyle(
-                  fontSize: size.width * 0.04,
-                  fontWeight: FontWeight.bold,
-                  height: 1,
-                ),
+         SizedBox(height: size.height * 0.01),
+        Text(
+          translationController.Translate(models.moNameAr!, models.moName!),
+          style: TextStyle(
+            fontSize: size.width * 0.04,
+            fontWeight: FontWeight.bold,
+            height: 1,
+          ),
+        ),
+          SizedBox(height: size.height * 0.001),
+        const Spacer(),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: ElevatedButton(
+            onPressed: () {
+              Get.to(() => VersionsPage(), arguments: models.moId);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Appcolors.kPrimaryColorShadow,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              padding:const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            ),
+            child: Text(
+              translationController.getLanguage(88),
+              style: const TextStyle(
+                color: Appcolors.kPrimaryColor,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // Handle button press
-              },
-              child: const Text('Button'),
-            ),
-          ],
+          ),
         ),
       ],
     ),
   );
 }
+

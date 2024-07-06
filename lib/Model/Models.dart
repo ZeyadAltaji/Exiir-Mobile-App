@@ -2,7 +2,7 @@ class Models {
   int? moId;
   String? moNameAr;
   String? moName;
-  Null? moLogo;
+  String? moLogo;
   int? moBrandId;
   bool? moIsActive;
   String? moCreatedAt;

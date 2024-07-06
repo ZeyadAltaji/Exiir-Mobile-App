@@ -1,4 +1,5 @@
 import 'package:ExiirEV/Core/Constant/routes.dart';
+import 'package:ExiirEV/Views/screens/BookingPage.dart';
 import 'package:ExiirEV/Views/screens/BrandsPage.dart';
 import 'package:ExiirEV/Views/screens/LoginPage.dart';
 import 'package:ExiirEV/Views/screens/PhoneNumberPage.dart';
@@ -16,6 +17,7 @@ List<GetPage<dynamic>> routes = [
   GetPage(name: AppRoutes.RegistrationPage, page: () => const RegistrationPage()),
   GetPage(name: AppRoutes.PhoneNumberPage, page: () => const PhoneNumberPage()),
   GetPage(name: AppRoutes.BrandsPage, page: () => const BrandsPage()),
+  GetPage(name: '/', page: () => BookingPage()),
 
 
 ];

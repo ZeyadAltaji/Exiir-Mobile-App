@@ -17,10 +17,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
   @override
-  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -31,7 +28,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController animationControllerMenu;
   late CurvedAnimation curve;
   late Animation<double> animation;
-
+  @override
+  void initState() {
+    super.initState();
+    animationControllerExplore = AnimationController(vsync: this);
+    animationControllerSearch = AnimationController(vsync: this);
+    animationControllerMenu = AnimationController(vsync: this);
+  }
   double offsetExplore = 0.0;
   double offsetSearch = 0.0;
   double offsetMenu = 0.0;
@@ -129,7 +132,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void animateMenu(bool open) {
     animationControllerMenu =
-        AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     curve =
         CurvedAnimation(parent: animationControllerMenu, curve: Curves.ease);
     animation =
@@ -175,18 +178,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               mapType: mapType,
               initialCameraPosition: CameraPosition(
                 target: controller.center.value,
-                zoom: 18.0,
+                zoom: 20,
               ),
               markers: Set<Marker>.of(controller.markers),
               onMapCreated: (GoogleMapController mapController) {
                 controller.mapController = mapController;
               },
               zoomControlsEnabled: false,
-              myLocationEnabled: false,
-              myLocationButtonEnabled: false,
-              zoomGesturesEnabled: false,
-                onCameraMove: controller.onCameraMove,
-
             ),
           ),
           ExploreWidget(
@@ -195,7 +193,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             animateExplore: animateExplore,
             isExploreOpen: isExploreOpen,
             onVerticalDragUpdate: onExploreVerticalUpdate,
-            onPanDown: () => animationControllerExplore.stop(),
+            onPanDown: () => animationControllerExplore?.stop(),
           ),
           offsetSearch != 0
               ? BackdropFilter(
@@ -251,7 +249,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             isSearchOpen: isSearchOpen,
             animateSearch: animateSearch,
             onHorizontalDragUpdate: onSearchHorizontalDragUpdate,
-            onPanDown: () => animationControllerSearch.stop(),
+            onPanDown: () => animationControllerSearch?.stop(),
           ),
           //search back
           SearchBackWidget(
@@ -271,14 +269,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             changeMapType(MapType.satellite);
                           },
                           mini: true,
-                          child:const Icon(Icons.satellite),
+                          child: Icon(Icons.satellite),
                         ),
                         FloatingActionButton(
                           onPressed: () {
                             changeMapType(MapType.normal);
                           },
                           mini: true,
-                          child:const Icon(Icons.layers),
+                          child: Icon(Icons.layers),
                         ),
                       ],
                     ),
@@ -297,7 +295,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ],
               )),
+          //layer button
 
+          // if (isDropdownVisible)
+
+          //  Positioned(
+          //   right: 20,
+          //   top: 100,
+          //    child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.end,
+          //     children: [
+          //       ElevatedButton(
+          //         onPressed: () {
+          //           changeMapType(MapType.normal);
+          //         },
+          //         child: Text('Auto'),
+          //       ),
+          //       ElevatedButton(
+          //         onPressed: () {
+          //           changeMapType(MapType.satellite);
+          //         },
+          //         child: Text('Satellite'),
+          //       ),
+          //     ],
+
+          //    )
+
+          //  ),
           MapButton(
             currentExplorePercent: currentExplorePercent,
             currentSearchPercent: currentSearchPercent,
@@ -347,14 +371,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               },
               child: Opacity(
                 opacity: 1 - (currentSearchPercent + currentExplorePercent),
-                child:  Container(
+                child: Container(
                   width: realW(71),
                   height: realH(71),
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(left: realW(17)),
-                  child:  Icon( 
+                  child: Icon(
                     Icons.menu,
-                    size:  realW(34),
+                    size: realW(34),
                   ),
                   decoration: BoxDecoration(
                       color: Appcolors.white,
@@ -363,7 +387,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           topRight: Radius.circular(realW(36))),
                       boxShadow: [
                         BoxShadow(
-                            color: const Color.fromRGBO(0, 0, 0, 0.3),
+                            color: Color.fromRGBO(0, 0, 0, 0.3),
                             blurRadius: realW(36)),
                       ]),
                 ),

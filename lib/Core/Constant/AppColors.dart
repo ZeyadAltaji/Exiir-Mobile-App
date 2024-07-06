@@ -20,6 +20,8 @@ class Appcolors {
 
   static const Color logoone = Color(0xff2b8dd3);
   static const Color logotwo = Color(0xff1d5f9f);
+  static const Color black26 = Colors.black26;
+  static const Color transparent = Colors.transparent;
 
 static const Color kPrimaryColor = Color.fromRGBO(3, 120, 221, 1);
 static const Color kPrimaryColorShadow = Color.fromRGBO(3, 120, 221, .2);

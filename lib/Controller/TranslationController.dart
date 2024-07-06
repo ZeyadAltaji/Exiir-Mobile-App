@@ -80,8 +80,8 @@ class TranslationController extends BaseController {
     return Languages[key] ?? key.toString();
   }
 
-  String GetMessages(String key) {
-    return Messages[key] ?? key;
+  String GetMessages(int key) {
+    return Messages[key] ??  key.toString();
   }
 
   String Translate(String langDescAr, String langDescEn) {

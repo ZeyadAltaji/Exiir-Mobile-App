@@ -194,7 +194,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                   ),
                 if (_otpError) // Display error message if OTP error state is true
                   Text(
-                    translationController.GetMessages('7'),
+                    translationController.GetMessages(7),
                     style: const TextStyle(
                       fontSize: 18,
                       color: Colors.red,

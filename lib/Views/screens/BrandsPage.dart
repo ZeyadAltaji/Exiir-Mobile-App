@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BrandsPage extends StatelessWidget {
-  const BrandsPage({Key? key}) : super(key: key);
+  const BrandsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class BrandsPage extends StatelessWidget {
                           ),
                           padding: EdgeInsets.all(size.width * 0.04),
                           child: Text(
-                            translationController.GetMessages('8'),
+                            translationController.GetMessages(8),
                             style: TextStyle(
                               fontSize: size.width * 0.04,
                               fontWeight: FontWeight.bold,
@@ -98,7 +98,7 @@ class BrandsPage extends StatelessWidget {
                             crossAxisCount: size.width < 500 ? 2 : 3,
                             crossAxisSpacing: crossAxisSpacing,
                             mainAxisSpacing: mainAxisSpacing,
-                            childAspectRatio: 1 / 1.3,
+                            childAspectRatio: 1 / 1.47,
                           ),
                           itemCount: controller.filteredBrands.length,
                           itemBuilder: (context, index) {
