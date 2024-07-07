@@ -6,6 +6,9 @@ class Appcolors {
   static const Color Black = Colors.black;
   static const Color blue = Colors.blue;
   static const Color lightBlue = Colors.lightBlue;
+  static const Color orange = Colors.orange;
+  static const Color black54 = Colors.black54;
+  static const Color black87 = Colors.black87;
 
   static const Color green = Colors.green;
   static const Color grey2 = Color.fromARGB(255, 66, 66, 66);

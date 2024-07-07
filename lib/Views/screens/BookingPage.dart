@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:ExiirEV/Core/Constant/Environment.dart';
+import 'package:ExiirEV/Model/ChargingStations.dart';
+import 'package:ExiirEV/Views/screens/Bookingsummary.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ExiirEV/Controller/BookingController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Model/Booking.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -365,8 +366,18 @@ class _BookingPageState extends State<BookingPage> {
 
     try {
       DateTime selectedDateTime = DateTime(_selectedDay.year,
-          _selectedDay.month, _selectedDay.day, _currentIndex! + 9);
+          _selectedDay.month, _selectedDay.day, _currentIndex!);
+    Map<String, int> durationMapping = {
+      '15 minutes': 15,
+      '30 minutes': 30,
+      '1 hour': 60,
+      '2 hours': 120,
+      '3 hours': 180,
+      '4 hours': 240,
+    };
 
+    // Retrieve the selected duration in hours from the mapping
+    int? durationInHours = durationMapping[_durations[_selectedDurationIndex!]];
       final response = await http.post(
         Uri.parse('${Environment.baseUrl}ExiirManagementAPI/checkAvailability'),
         headers: <String, String>{
@@ -374,8 +385,8 @@ class _BookingPageState extends State<BookingPage> {
         },
         body: jsonEncode({
           'date': selectedDateTime.toIso8601String(),
-          'time': _currentIndex! + 9,
-          'duration': _selectedDurationIndex! + 1,
+          'time': _currentIndex!,
+          'duration': durationInHours,
           'stationId': _selectedStation!,
         }),
       );
@@ -405,9 +416,16 @@ class _BookingPageState extends State<BookingPage> {
 
     try {
       DateTime selectedDateTime = DateTime(_selectedDay.year,
-          _selectedDay.month, _selectedDay.day, _currentIndex! + 9);
-
-      int durationInHours = (_selectedDurationIndex! + 1) * 15;
+          _selectedDay.month, _selectedDay.day, _currentIndex!);
+ Map<String, int> durationMapping = {
+      '15 minutes': 15,
+      '30 minutes': 30,
+      '1 hour': 60,
+      '2 hours': 120,
+      '3 hours': 180,
+      '4 hours': 240,
+    };
+    int? durationInHours = durationMapping[_durations[_selectedDurationIndex!]];
       final response = await http.post(
         Uri.parse('${Environment.baseUrl}ExiirManagementAPI/confirmBooking'),
         headers: <String, String>{
@@ -415,7 +433,7 @@ class _BookingPageState extends State<BookingPage> {
         },
         body: jsonEncode({
           'date': selectedDateTime.toIso8601String(),
-          'timeSlot': _currentIndex! + 9,
+          'timeSlot': _currentIndex!,
           'duration': durationInHours,
           'tripType': _selectedTrip.toString().split('.').last,
           'stationId': _selectedStation!,
@@ -427,12 +445,20 @@ class _BookingPageState extends State<BookingPage> {
           _isAvailable =
               false;  
         });
+        
         Get.snackbar(
          translationController.GetMessages(10),
            translationController.GetMessages(11),
           duration:const Duration(seconds: 4),
           snackPosition: SnackPosition.BOTTOM,
         );
+        var responseData = jsonDecode(response.body);
+
+        Get.to(() => Bookingsummary(), arguments: {
+        'station': ChargingStations.fromJson(responseData['getnameStation']),
+                'booking': Booking.fromJson(responseData['booking']),
+
+      });
       } else {
         throw Exception('Failed to confirm booking');
       }

@@ -1,6 +1,8 @@
 class Booking {
   int? BookingId;
   DateTime BookingDate;
+  DateTime? EndBookingDate;
+
   String TripType;
   int BookingTime;
   int Duration;
@@ -8,8 +10,9 @@ class Booking {
   int StationId;
 
   Booking({
-     this.BookingId,
+    this.BookingId,
     required this.BookingDate,
+    this.EndBookingDate,
     required this.TripType,
     required this.BookingTime,
     required this.Duration,
@@ -21,6 +24,7 @@ class Booking {
     return Booking(
       BookingId: json['bookingId'],
       BookingDate: DateTime.parse(json['bookingDate']),
+      EndBookingDate: DateTime.parse(json['endBookingDate']),
       TripType: json['tripType'],
       BookingTime: json['bookingTime'],
       Duration: json['duration'],
@@ -34,6 +38,7 @@ class Booking {
     return {
       'bookingId': BookingId,
       'bookingDate': BookingDate.toIso8601String(),
+      'endBookingDate': EndBookingDate!.toIso8601String(),
       'tripType': TripType,
       'bookingTime': BookingTime,
       'duration': Duration,

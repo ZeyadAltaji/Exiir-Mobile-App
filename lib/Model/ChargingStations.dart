@@ -11,8 +11,7 @@ class ChargingStations {
   bool? csIsActive;
   String? csCreatedAt;
   int? csCreatedBy;
-  String? stationPoints;
-
+ 
   ChargingStations(
       {this.csId,
       this.csNameAr,
@@ -26,7 +25,7 @@ class ChargingStations {
       this.csIsActive,
       this.csCreatedAt,
       this.csCreatedBy,
-      this.stationPoints});
+   });
 
   ChargingStations.fromJson(Map<String, dynamic> json) {
     csId = json['cs_id'];
@@ -41,8 +40,7 @@ class ChargingStations {
     csIsActive = json['cs_is_active'];
     csCreatedAt = json['cs_created_at'];
     csCreatedBy = json['cs_created_by'];
-    stationPoints = json['stationPoints'];
-  }
+   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -58,7 +56,6 @@ class ChargingStations {
     data['cs_is_active'] = this.csIsActive;
     data['cs_created_at'] = this.csCreatedAt;
     data['cs_created_by'] = this.csCreatedBy;
-    data['stationPoints'] = this.stationPoints;
-    return data;
+     return data;
   }
 }

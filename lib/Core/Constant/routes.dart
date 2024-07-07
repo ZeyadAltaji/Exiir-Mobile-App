@@ -5,5 +5,7 @@ class AppRoutes {
   static const String PhoneNumberPage = '/PhoneNumberPage';
   static const String BrandsPage = '/BrandsPage';
   static const String ModelsPage = '/ModelsPage';
+  static const String BookingPage = '/BookingPage';
+  static const String Bookingsummary = '/Bookingsummary';
 
 }

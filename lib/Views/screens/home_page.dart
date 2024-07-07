@@ -28,13 +28,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController animationControllerMenu;
   late CurvedAnimation curve;
   late Animation<double> animation;
-  @override
-  void initState() {
-    super.initState();
-    animationControllerExplore = AnimationController(vsync: this);
-    animationControllerSearch = AnimationController(vsync: this);
-    animationControllerMenu = AnimationController(vsync: this);
-  }
+
   double offsetExplore = 0.0;
   double offsetSearch = 0.0;
   double offsetMenu = 0.0;
