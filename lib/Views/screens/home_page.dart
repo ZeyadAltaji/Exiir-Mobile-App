@@ -43,7 +43,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   double get currentSearchPercent =>
       max(0.0, min(1.0, offsetSearch / (347 - 68.0)));
   double get currentMenuPercent => max(0.0, min(1.0, offsetMenu / 358));
+  @override
+  void initState() {
+    super.initState();
+    animationControllerExplore = AnimationController(vsync: this);
+    animationControllerSearch = AnimationController(vsync: this);
+    animationControllerMenu = AnimationController(vsync: this);
+  }
 
+  @override
+  void dispose() {
+    animationControllerExplore.dispose();
+    animationControllerSearch.dispose();
+    animationControllerMenu.dispose();
+    super.dispose();
+  }
   void onSearchHorizontalDragUpdate(details) {
     setState(() {
       offsetSearch -= details.delta.dx;
@@ -172,7 +186,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               mapType: mapType,
               initialCameraPosition: CameraPosition(
                 target: controller.center.value,
-                zoom: 20,
+                zoom: 10.0,
               ),
               markers: Set<Marker>.of(controller.markers),
               onMapCreated: (GoogleMapController mapController) {

@@ -26,7 +26,7 @@ class HomeController extends BaseController {
   final TranslationController translationController =
       Get.put(TranslationController());
   double offsetExplore = 0.0;
-  double zoomLevel = 18.0;
+  double zoomLevel = 8.0;
   double get currentExplorePercent =>
       max(0.0, min(1.0, offsetExplore / (760.0 - 122.0)));
 
@@ -73,7 +73,7 @@ class HomeController extends BaseController {
         Marker(
           markerId: MarkerId(station.stationsName.toString()),
           position: LatLng(double.parse(station.x!), double.parse(station.y!)),
-          icon: await _createCustomMarkerIcon(Get.context!, zoomLevel),
+          icon: await _createCustomMarkerIcon(Get.context!, 18.0),
           infoWindow: InfoWindow(
             title: station.stationsName.toString(),
             snippet:
@@ -203,17 +203,18 @@ class HomeController extends BaseController {
   }
 
   void findNearestStation() {
-    _sortStationsByDistance();
-    if (stations.isNotEmpty) {
-      final nearestStation = stations.first;
-      mapController?.animateCamera(
-        CameraUpdate.newLatLng(
-          LatLng(
-              double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
-        ),
-      );
-    }
+  _sortStationsByDistance();
+  if (stations.isNotEmpty) {
+    final nearestStation = stations.first;
+    mapController?.animateCamera(
+      CameraUpdate.newLatLngZoom(
+        LatLng(double.parse(nearestStation.x!), double.parse(nearestStation.y!)),
+        18.0, // Set the zoom level to 18
+      ),
+    );
   }
+}
+
 
   void launchDirections(double lat, double lng) async {
     final googleUrl =

@@ -21,8 +21,8 @@ class Appcolors {
   static Color grey200 = Colors.grey[200]!;
   static Color grey600 = Colors.grey[600]!;
 
-  static const Color logoone = Color(0xff2b8dd3);
-  static const Color logotwo = Color(0xff1d5f9f);
+  static const Color logoone = Color.fromARGB(255, 75, 171, 239);
+  static const Color logotwo = Color.fromARGB(255, 75, 171, 239);
   static const Color black26 = Colors.black26;
   static const Color transparent = Colors.transparent;
 
