@@ -3,4 +3,4 @@ import 'package:sizer_pro/sizer.dart';
 
 final fontEn = GoogleFonts.roboto();
 
-final fontAr = GoogleFonts.amiri();
+final fontAr = GoogleFonts.cairo();

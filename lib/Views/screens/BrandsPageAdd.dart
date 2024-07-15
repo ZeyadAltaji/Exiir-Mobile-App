@@ -7,8 +7,8 @@ import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BrandsPage extends StatelessWidget {
-  const BrandsPage({super.key});
+class BrandsPageAdd extends StatelessWidget {
+  const BrandsPageAdd({super.key});
 
   @override
   Widget build(BuildContext context) {

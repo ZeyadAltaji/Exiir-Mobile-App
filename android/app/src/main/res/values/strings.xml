@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resource>
-<string name="facebook_app_id">2040523899678315</string>
-<string name="fb_login_protocol_scheme">fb2040523899678315</string>
-<string name="facebook_client_token">320a93fac0669f302b03382026dcf7af</string>
-</resource>
+<resources>
+    <string name="app_name">Exiir Ev</string>
+    <string name="facebook_app_id">842299024069314</string>
+    <string name="fb_login_protocol_scheme">fb22f37cb5b1ae8a13cdf49b2aeb56a82c</string>
+ <string name="facebook_client_token">56789</string>
+
+</resources>

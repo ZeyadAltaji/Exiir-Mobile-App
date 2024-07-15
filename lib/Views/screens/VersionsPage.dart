@@ -13,13 +13,19 @@ class VersionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final VersionsController controller =
-        Get.put(VersionsController(ModelId: Get.arguments));
+        final arguments = Get.arguments as Map<String, int?>;
+
+   final VersionsController controller = Get.put(
+      VersionsController(
+        ModelId: arguments['moId'],
+        BrandId: arguments['moBrandId'],
+      ),
+    );
     final TranslationController translationController =
         Get.put(TranslationController());
     final size = MediaQuery.of(context).size;
     final double padding = size.width * 0.04;
-     final double crossAxisSpacing = size.width * 0.04;
+    final double crossAxisSpacing = size.width * 0.04;
     final double mainAxisSpacing = size.height * 0.04;
     TextEditingController textController = TextEditingController();
 
@@ -122,49 +128,60 @@ class VersionsPage extends StatelessWidget {
                         )
                       : Padding(
                           padding: const EdgeInsets.all(16.0),
-                           child: GridView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: size.width < 500 ? 2 : 3,
-                            crossAxisSpacing: crossAxisSpacing,
-                            mainAxisSpacing: mainAxisSpacing,
-                            childAspectRatio: 1 / 1.47,
-                          ),
-                           itemCount: controller.filteredVersions.length,
+                          child: GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: size.width < 500 ? 2 : 3,
+                              crossAxisSpacing: crossAxisSpacing,
+                              mainAxisSpacing: mainAxisSpacing,
+                              childAspectRatio: 1 / 0.40,
+                            ),
+                            itemCount: controller.filteredVersions.length,
                             itemBuilder: (context, index) {
-                            final models = controller.filteredVersions[index];
-                            return GestureDetector(
-                              onTap: () {},
-                              child: buildVersions(models, index, size, crossAxisSpacing, mainAxisSpacing),
-                            );
-                          },
-                         
+                              final models = controller.filteredVersions[index];
+                              return GestureDetector(
+                                onTap: () {},
+                                child: buildVersions(models, index, size,
+                                    crossAxisSpacing, mainAxisSpacing),
+                              );
+                            },
                           ),
                         ),
                 ),
               ),
-                SizedBox(height: 20), 
-                 Padding(
+              const SizedBox(height: 20),
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => BookingPage());
-
-                  },
-                  child: Text(
-                    translationController.getLanguage(92),
-                    style: TextStyle(fontSize: 16),
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     controller.SaveUserCars(controller.BrandId!, controller.ModelId!, 0);
+                    //   },
+                    //   child: Text(
+                    //     translationController.getLanguage(92),
+                    //     style: const TextStyle(fontSize: 16),
+                    //   ),
+                    // ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.offNamed(AppRoutes.HomePage);
+                      },
+                      child: Text(
+                        translationController.getLanguage(110),
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
-              ),// Adjust as needed
+              ),
             ],
           ),
         ),
-      
       ),
-      
     );
-
   }
 }

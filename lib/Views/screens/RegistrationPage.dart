@@ -9,14 +9,14 @@ import 'package:get/get.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 
 import '../../Controller/AccountController.dart';
- 
+
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final translationController = Get.put(TranslationController());
-     final RoundedLoadingButtonController googleController =
+    final RoundedLoadingButtonController googleController =
         RoundedLoadingButtonController();
     final RoundedLoadingButtonController facebookController =
         RoundedLoadingButtonController();
@@ -24,7 +24,7 @@ class RegistrationPage extends StatelessWidget {
         RoundedLoadingButtonController();
     final RoundedLoadingButtonController phoneController =
         RoundedLoadingButtonController();
-            final accountController = Get.put(AccountControllerImp());
+    final accountController = Get.put(AccountControllerImp());
 
     // Check if the device is an iPhone
     bool isIPhone = Theme.of(context).platform == TargetPlatform.iOS;
@@ -81,7 +81,7 @@ class RegistrationPage extends StatelessWidget {
                 CustomRoundedLoadingButton(
                   controller: googleController,
                   onPressed: () {
-                    accountController.signUpWithGoogle();
+                    accountController.signUpWithGoogle(context);
                   },
                   color: Appcolors.red,
                   successColor: Appcolors.red,
@@ -92,7 +92,7 @@ class RegistrationPage extends StatelessWidget {
                 CustomRoundedLoadingButton(
                   controller: facebookController,
                   onPressed: () async {
-                   await  accountController.signInWithFacebook();
+                    await accountController.signUpWithFacebook(context);
                   },
                   color: Appcolors.blue,
                   successColor: Appcolors.blue,
@@ -100,12 +100,11 @@ class RegistrationPage extends StatelessWidget {
                   text: translationController.getLanguage(73).trim(),
                 ),
                 const SizedBox(height: 10),
-                
                 CustomRoundedLoadingButton(
                   controller: phoneController,
                   onPressed: () {
                     accountController.goToPhoneNumberPage();
-                   },
+                  },
                   color: Appcolors.Black,
                   successColor: Appcolors.Black,
                   icon: FontAwesomeIcons.phone,
@@ -123,7 +122,6 @@ class RegistrationPage extends StatelessWidget {
                     icon: FontAwesomeIcons.apple,
                     text: translationController.getLanguage(76).trim(),
                   ),
-
                 const SizedBox(height: 30),
                 Textsignup(
                   textone: translationController.getLanguage(79),

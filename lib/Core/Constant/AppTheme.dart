@@ -42,7 +42,7 @@ ThemeData ThemeAr = ThemeData(
       color: Appcolors.grey,
       fontWeight: FontWeight.bold,
       fontSize: 14,
-      fontFamily: "Almarai",
+      fontFamily: "Cairo",
     ),
   ),
   primarySwatch: Colors.blue,

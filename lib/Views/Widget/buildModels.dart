@@ -1,3 +1,4 @@
+ 
 import 'dart:ui';
 
 import 'package:ExiirEV/Controller/TranslationController.dart';
@@ -12,62 +13,44 @@ Widget buildModels(Models models, int? index, Size? size, double crossAxisSpacin
     double mainAxisSpacing) {
   final translationController = Get.put(TranslationController());
 
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-    ),
-    padding: EdgeInsets.all(size!.width * 0.04),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        SizedBox(
-          height: size.height * 0.12,
-          child: Center(
-            child: Hero(
-              tag: models.moId!,
-              child: Image.network(
-                 '${Environment.imageUrl}/${models.moLogo}',
-                fit: BoxFit.fitWidth,
+  return GestureDetector(
+    onTap: () {
+Get.to(() => VersionsPage(), arguments: {'moId': models.moId, 'moBrandId': models.moBrandId});
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      padding: EdgeInsets.all(size!.width * 0.04),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(
+            height: size.height * 0.12,
+            child: Center(
+              child: Hero(
+                tag: models.moId!,
+                child: Image.network(
+                  '${Environment.imageUrl}/${models.moLogo}',
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             ),
           ),
-        ),
-         SizedBox(height: size.height * 0.01),
-        Text(
-          translationController.Translate(models.moNameAr!, models.moName!),
-          style: TextStyle(
-            fontSize: size.width * 0.04,
-            fontWeight: FontWeight.bold,
-            height: 1,
+          SizedBox(height: size.height * 0.01),
+          Text(
+            translationController.Translate(models.moNameAr!, models.moName!),
+            style: TextStyle(
+              fontSize: size.width * 0.04,
+              fontWeight: FontWeight.bold,
+              height: 1,
+            ),
           ),
-        ),
           SizedBox(height: size.height * 0.001),
-        const Spacer(),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: ElevatedButton(
-            onPressed: () {
-              Get.to(() => VersionsPage(), arguments: models.moId);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Appcolors.kPrimaryColorShadow,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              padding:const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            ),
-            child: Text(
-              translationController.getLanguage(88),
-              style: const TextStyle(
-                color: Appcolors.kPrimaryColor,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
+          const Spacer(),
+        ],
+      ),
     ),
   );
 }

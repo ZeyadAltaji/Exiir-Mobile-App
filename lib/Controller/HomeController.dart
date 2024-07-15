@@ -32,19 +32,25 @@ class HomeController extends BaseController {
 
   final RxSet<Marker> markers = <Marker>{}.obs;
   final RxList<StationsModels> stations = <StationsModels>[].obs;
+    RxList<StationsModels> filteredStations = <StationsModels>[].obs;
+
   late Rx<LatLng> center =
       const LatLng(31.999360418399394, 35.88007842069041).obs;
   GoogleMapController? mapController;
   final Map<String, double> stationDistances = {};
   Request request = Get.find();
+  RxString searchText = ''.obs;
 
   List<ChargingStations> chargingStations = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() async {
     super.onInit();
     await _initializeMarkers();
     await _updateUserLocation();
+        filteredStations.value = stations;
+
   }
 
   Future<void> _initializeMarkers() async {
@@ -73,20 +79,20 @@ class HomeController extends BaseController {
         Marker(
           markerId: MarkerId(station.stationsName.toString()),
           position: LatLng(double.parse(station.x!), double.parse(station.y!)),
-          icon: await _createCustomMarkerIcon(Get.context!, 18.0),
+          icon: await _createCustomMarkerIcon(Get.context!, 35.0),
           infoWindow: InfoWindow(
             title: station.stationsName.toString(),
             snippet:
                 '${distance.toStringAsFixed(2)} ${translationController.getLanguage(60)}',
             onTap: () {
-              _showDetail(Get.context!, station, distance);
+              showDetail(Get.context!, station, distance);
             },
           ),
         ),
       );
     }
   }
-
+ 
   Future<void> _fetchChargingStations() async {
     statusRequest = StatusRequest.loading;
     update();
@@ -172,7 +178,7 @@ class HomeController extends BaseController {
     });
   }
 
-  void _showDetail(
+  void showDetail(
     BuildContext context, StationsModels station, double distance) {
     showModalBottomSheet(
       context: context,
@@ -193,6 +199,35 @@ class HomeController extends BaseController {
       },
     );
   }
+ void showDetails(
+    BuildContext context, StationsModels station, double distance) {
+       LatLng stationLatLng = LatLng(
+            double.parse(station.x ?? '0'),
+            double.parse(station.y ?? '0'),
+         );
+        mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(stationLatLng, 18.0),
+        );
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Sizer(
+          builder: (context, orientation, deviceType) {
+            return ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
+              child: SizedBox(
+                height: double.infinity,
+                width: double.infinity,
+                child:
+                    DetailsContentWidget(station: station, distance: distance),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+  
 
   void zoomIn() {
     mapController?.animateCamera(CameraUpdate.zoomIn());
@@ -236,44 +271,100 @@ class HomeController extends BaseController {
   }
 
   void goToLoginPage() {
-    Get.toNamed(AppRoutes.LoginPage);
+    Get.toNamed(AppRoutes.BrandsPage);
   }
+Future<BitmapDescriptor> _createCustomMarkerIcon(BuildContext context, double zoom) async {
+  String imageUrl = "https://res.cloudinary.com/dk5eekms5/image/upload/v1719838882/ExiirEV/yrasrxny9kowyylgsyuv.png";
+  final double markerSize = 3500.0 / zoom;
 
-  Future<BitmapDescriptor> _createCustomMarkerIcon(
-      BuildContext context, double zoom) async {
-    String imageUrl =
-        "https://res.cloudinary.com/dk5eekms5/image/upload/v1719838882/ExiirEV/yrasrxny9kowyylgsyuv.png";
-    final double markerSize = 3500.0 / zoom;
+  final PictureRecorder pictureRecorder = PictureRecorder();
+  final Canvas canvas = Canvas(pictureRecorder);
+  final Size size = Size(markerSize, markerSize);
 
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Size size = Size(markerSize, markerSize);
+  // رسم دائرة
+  final Paint paint = Paint()..color = Colors.blue;
+  canvas.drawCircle(Offset(size.width / 2, size.height / 2), markerSize / 2, paint);
 
-    final Paint paint = Paint();
+  // تحميل الصورة من الرابط المعطى
+  final Uint8List imageData = await _loadImageFromUrl(imageUrl);
+  if (imageData.isNotEmpty) {
+    final ui.Codec codec = await ui.instantiateImageCodec(imageData);
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    final ui.Image image = frameInfo.image;
 
-    paint.color = Colors.blue;
-    canvas.drawCircle(
-        Offset(size.width / 2, size.height / 2), markerSize / 2, paint);
+    // حساب النسبة المئوية لتناسب الصورة داخل الدائرة
+    double imageWidth = image.width.toDouble();
+    double imageHeight = image.height.toDouble();
+    double aspectRatio = imageWidth / imageHeight;
 
-    final Uint8List imageData = await _loadImageFromUrl(imageUrl);
-    if (imageData.isNotEmpty) {
-      final ui.Codec codec = await ui.instantiateImageCodec(imageData);
-      final ui.FrameInfo frameInfo = await codec.getNextFrame();
-      final ui.Image image = frameInfo.image;
-
-      canvas.drawImage(image, Offset.zero, Paint());
+    double scaledWidth, scaledHeight;
+    if (aspectRatio >= 1.0) {
+      scaledWidth = markerSize;
+      scaledHeight = markerSize / aspectRatio;
+    } else {
+      scaledHeight = markerSize;
+      scaledWidth = markerSize * aspectRatio;
     }
 
-    final ui.Image markerImage = await pictureRecorder.endRecording().toImage(
-          size.width.toInt(),
-          size.height.toInt(),
-        );
-    final ByteData? byteData =
-        await markerImage.toByteData(format: ui.ImageByteFormat.png);
-    final Uint8List bytes = byteData!.buffer.asUint8List();
-
-    return BitmapDescriptor.fromBytes(bytes);
+    // رسم الصورة داخل الدائرة
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, imageWidth, imageHeight),
+      Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2),
+        width: scaledWidth,
+        height: scaledHeight,
+      ),
+      Paint(),
+    );
   }
+
+  // إنهاء الرسم وتحويله إلى صورة نهائية
+  final ui.Image markerImage = await pictureRecorder.endRecording().toImage(
+    size.width.toInt(),
+    size.height.toInt(),
+  );
+  final ByteData? byteData = await markerImage.toByteData(format: ui.ImageByteFormat.png);
+  final Uint8List bytes = byteData!.buffer.asUint8List();
+
+  return BitmapDescriptor.fromBytes(bytes);
+}
+
+  // Future<BitmapDescriptor> _createCustomMarkerIcon(
+  //     BuildContext context, double zoom) async {
+  //   String imageUrl =
+  //       "https://res.cloudinary.com/dk5eekms5/image/upload/v1719838882/ExiirEV/yrasrxny9kowyylgsyuv.png";
+  //   final double markerSize = 3500.0 / zoom;
+
+  //   final PictureRecorder pictureRecorder = PictureRecorder();
+  //   final Canvas canvas = Canvas(pictureRecorder);
+  //   final Size size = Size(markerSize, markerSize);
+
+  //   final Paint paint = Paint();
+
+  //   paint.color = Colors.blue;
+  //   canvas.drawCircle(
+  //       Offset(size.width / 2, size.height / 2), markerSize / 2, paint);
+
+  //   final Uint8List imageData = await _loadImageFromUrl(imageUrl);
+  //   if (imageData.isNotEmpty) {
+  //     final ui.Codec codec = await ui.instantiateImageCodec(imageData);
+  //     final ui.FrameInfo frameInfo = await codec.getNextFrame();
+  //     final ui.Image image = frameInfo.image;
+
+  //     canvas.drawImage(image, Offset.zero, Paint());
+  //   }
+
+  //   final ui.Image markerImage = await pictureRecorder.endRecording().toImage(
+  //         size.width.toInt(),
+  //         size.height.toInt(),
+  //       );
+  //   final ByteData? byteData =
+  //       await markerImage.toByteData(format: ui.ImageByteFormat.png);
+  //   final Uint8List bytes = byteData!.buffer.asUint8List();
+
+  //   return BitmapDescriptor.fromBytes(bytes);
+  // }
 
   Future<Uint8List> _loadImageFromUrl(String imageUrl) async {
     final http.Response response = await http.get(Uri.parse(imageUrl));
@@ -287,4 +378,19 @@ class HomeController extends BaseController {
   void onCameraMove(CameraPosition position) {
     zoomLevel = position.zoom;
   }
+   void filterStations(String query) {
+  if (query.isEmpty) {
+    filteredStations.value = stations;
+  } else {
+    filteredStations.value = stations.where((station) {
+      final nameMatch = station.stationsName?.toLowerCase().contains(query.toLowerCase()) ?? false;
+      final availabilityMatch = query.toLowerCase().contains('available') && station.available == true ||
+                               query.toLowerCase().contains('متاح') && station.available == true ||
+                               query.toLowerCase().contains('not available') && station.available == false ||
+                               query.toLowerCase().contains('غير متاح') && station.available == false;
+      return nameMatch || availabilityMatch;
+    }).toList();
+  }
+}
+
 }

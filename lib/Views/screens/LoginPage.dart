@@ -71,8 +71,7 @@ class LoginPage extends StatelessWidget {
                 CustomRoundedLoadingButton(
                   controller: accountController.googleController,
                   onPressed: () {
-                    accountController.signInWithGoogle();
-
+                    accountController.signInWithGoogle(context);
                   },
                   color: Appcolors.red,
                   successColor: Appcolors.red,
@@ -83,7 +82,7 @@ class LoginPage extends StatelessWidget {
                 CustomRoundedLoadingButton(
                   controller: accountController.facebookController,
                   onPressed: () {
-                    accountController.handleFacebookAuth(context);
+                    accountController.signInWithFacebook(context);
                   },
                   color: Appcolors.blue,
                   successColor: Appcolors.blue,
@@ -91,7 +90,6 @@ class LoginPage extends StatelessWidget {
                   text: translationController.getLanguage(68).trim(),
                 ),
                 const SizedBox(height: 10),
-            
                 CustomRoundedLoadingButton(
                   controller: accountController.phoneController,
                   onPressed: () {

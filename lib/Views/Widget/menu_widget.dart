@@ -16,6 +16,7 @@ class MenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return currentMenuPercent != 0
         ? Positioned(
+ 
             left: realW(-358 + 358 * currentMenuPercent!),
             width: realW(358),
             height: screenHeight,
@@ -137,7 +138,6 @@ class MenuWidget extends StatelessWidget {
                               itemExtent: realH(56),
                               delegate: new SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
-                                //创建列表项
                                 return Container(
                                   width: realW(321),
                                   alignment: Alignment.centerLeft,

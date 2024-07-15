@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:ExiirEV/Controller/BaseController.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Constant/Environment.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
-import 'package:ExiirEV/Core/Functions/InternetProvider.dart';
-import 'package:ExiirEV/Core/Functions/SignInProvider.dart';
-import 'package:ExiirEV/Core/Functions/openSnackbar.dart';
+
 import 'package:ExiirEV/Views/screens/VerifyOTP.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -13,25 +12,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toasty_box/toast_service.dart';
 
 abstract class AccountController extends BaseController {
-  signInWithGoogle();
-  signUpWithGoogle();
+  signInWithGoogle(BuildContext context);
+  signUpWithGoogle(BuildContext context);
   signInWithPhoneNumber();
   signUpWithPhoneNumber(String PhoneNumber);
   sendOTPVerfiy();
   signInWithApple();
-  signInWithFacebook();
   GoToPageRegistrationPage();
   GoToPageLoginPage();
   GoToHomePage();
   goToPhoneNumberPage();
+  Future<void> signUpWithFacebook(BuildContext context);
 }
 
 class AccountControllerImp extends AccountController {
+  final TranslationController translationController =
+      Get.put(TranslationController());
   final RoundedLoadingButtonController googleController =
       RoundedLoadingButtonController();
   final RoundedLoadingButtonController facebookController =
@@ -40,94 +42,8 @@ class AccountControllerImp extends AccountController {
       RoundedLoadingButtonController();
   final RoundedLoadingButtonController phoneController =
       RoundedLoadingButtonController();
-      @override
-  signUpWithPhoneNumber(String phoneNumber) async {
-    try {
-      if (phoneNumber.startsWith("0")) {
-        phoneNumber = "+962" + phoneNumber.substring(1);
-      }
-
-      final response = await http.post(
-        Uri.parse('${Environment.baseUrl}Auth/SentOtp'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'To': phoneNumber,
-          'From':'+12093403185',
-          'Message': 'Your OTP code is: {OTP}',
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final String verificationId =
-            jsonDecode(response.body)['verificationId'];
-        Get.to(VerifyOTP(verificationId: verificationId , phoneNumber:phoneNumber));
-      } else {
-        print('Failed to send OTP');
-      }
-    } catch (e) {
-      print("Failed to verify phone number: $e");
-    }
-  }
-Future<bool> verifyOTP(String verificationId, String otp) async {
-    try {
-      final response = await http.post(
-        Uri.parse('${Environment.baseUrl}Auth/VerifyOtp'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'verificationId': verificationId,
-          'otp': otp,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        print('OTP verified successfully');
-        return true; // Return true if OTP verification succeeds
-      } else {
-        print('Failed to verify OTP');
-        return false; // Return false if OTP verification fails
-      }
-    } catch (e) {
-      print("Failed to verify OTP: $e");
-      return false; // Return false on error
-    }
-  }
-  
-
   @override
-  Future<UserCredential> signInWithFacebook() async {
-    final LoginResult loginResult = await FacebookAuth.instance.login();
-
-    if (loginResult.status == LoginStatus.success) {
-      final accessToken = loginResult.accessToken!.tokenString;
-
-      if (accessToken != null) {
-        final OAuthCredential facebookAuthCredential =
-            FacebookAuthProvider.credential(accessToken);
-
-        return FirebaseAuth.instance
-            .signInWithCredential(facebookAuthCredential);
-      } else {
-        throw FirebaseAuthException(
-          code: 'ERROR_FACEBOOK_LOGIN_FAILED',
-          message: 'Failed to retrieve access token.',
-        );
-      }
-    } else {
-      throw FirebaseAuthException(
-        code: 'ERROR_FACEBOOK_LOGIN_FAILED',
-        message: loginResult.message,
-      );
-    }
-  }
-
-
-
-  @override
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     try {
       googleController.start();
 
@@ -158,16 +74,30 @@ Future<bool> verifyOTP(String verificationId, String otp) async {
         );
 
         if (response.statusCode == 200) {
+          var UserId = jsonDecode(response.body)['us_user_id'];
+
+          final preferences = await SharedPreferences.getInstance();
+          preferences.setString('us_username', googleUser!.displayName!);
+          preferences.setString('us_email', googleUser!.email);
+          preferences.setString('us_googleId', googleUser!.id);
+          preferences.setString('IsLoged', 'true');
+          preferences.setString('UserId', UserId.toString());
+
           Get.toNamed(AppRoutes.BrandsPage);
 
           googleController.stop();
         } else {
+          ToastService.showErrorToast(context,
+              message: translationController.GetMessages(15));
+
           print('Failed to sign in with Google: ${response.body}');
           googleController.stop();
         }
       }
     } catch (e) {
-      print('Error signing in with Google: $e');
+      ToastService.showErrorToast(context,
+          message: translationController.GetMessages(15));
+
       googleController.stop();
 
       throw Exception('Google authentication failed');
@@ -175,7 +105,7 @@ Future<bool> verifyOTP(String verificationId, String otp) async {
   }
 
   @override
-  Future<void> signUpWithGoogle() async {
+  Future<void> signUpWithGoogle(BuildContext context) async {
     try {
       googleController.start();
 
@@ -207,18 +137,86 @@ Future<bool> verifyOTP(String verificationId, String otp) async {
         );
 
         if (response.statusCode == 200) {
+          var UserId = jsonDecode(response.body)['us_user_id'];
+          final preferences = await SharedPreferences.getInstance();
+          preferences.setString('us_username', googleUser!.displayName!);
+          preferences.setString('us_email', googleUser!.email);
+          preferences.setString('us_googleId', googleUser!.id);
+          preferences.setString('IsLoged', 'true');
+          preferences.setString('UserId', UserId.toString());
+
           Get.toNamed(AppRoutes.BrandsPage);
           googleController.stop();
         } else {
-          print('Failed to sign in with Google: ${response.body}');
+          ToastService.showErrorToast(context,
+              message: translationController.GetMessages(15));
           googleController.stop();
         }
       }
     } catch (e) {
-      print('Error signing in with Google: $e');
+      ToastService.showErrorToast(context,
+          message: translationController.GetMessages(15));
       googleController.stop();
 
       throw Exception('Google authentication failed');
+    }
+  }
+
+  @override
+  signUpWithPhoneNumber(String phoneNumber) async {
+    try {
+      if (phoneNumber.startsWith("0")) {
+        phoneNumber = "+962" + phoneNumber.substring(1);
+      }
+
+      final response = await http.post(
+        Uri.parse('${Environment.baseUrl}Auth/SentOtp'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'To': phoneNumber,
+          'From': '+12093403185',
+          'Message': 'Your OTP code is: {OTP}',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final String verificationId =
+            jsonDecode(response.body)['verificationId'];
+        Get.to(VerifyOTP(
+            verificationId: verificationId, phoneNumber: phoneNumber));
+      } else {
+        print('Failed to send OTP');
+      }
+    } catch (e) {
+      print("Failed to verify phone number: $e");
+    }
+  }
+
+  Future<bool> verifyOTP(String verificationId, String otp) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${Environment.baseUrl}Auth/VerifyOtp'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'verificationId': verificationId,
+          'otp': otp,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('OTP verified successfully');
+        return true; // Return true if OTP verification succeeds
+      } else {
+        print('Failed to verify OTP');
+        return false; // Return false if OTP verification fails
+      }
+    } catch (e) {
+      print("Failed to verify OTP: $e");
+      return false; // Return false on error
     }
   }
 
@@ -239,52 +237,139 @@ Future<bool> verifyOTP(String verificationId, String otp) async {
   }
 
   // handling facebookauth
-  // handling google sigin in
-  Future<void> handleFacebookAuth(BuildContext context) async {
-    final sp = context.read<SignInProvider>();
-    final ip = context.read<InternetProvider>();
-    await ip.checkInternetConnection();
+  Future<void> signUpWithFacebook(BuildContext context) async {
+    try {
+      // Log the start of the process
+      print("Starting Facebook sign-in process...");
 
-    if (ip.hasInternet == false) {
-      openSnackbar(context, "Check your Internet connection", Colors.red);
-      facebookController.reset();
-    } else {
-      await sp.signInWithFacebook().then((value) {
-        if (sp.hasError == true) {
-          openSnackbar(context, sp.errorCode.toString(), Colors.red);
-          facebookController.reset();
-        } else {
-          // checking whether user exists or not
-          sp.checkUserExists().then((value) async {
-            if (value == true) {
-              // user exists
-              await sp.getUserDataFromFirestore(sp.uid).then((value) => sp
-                  .saveDataToSharedPreferences()
-                  .then((value) => sp.setSignIn().then((value) {
-                        facebookController.success();
-                        // handleAfterSignIn();
-                      })));
-            } else {
-              // user does not exist
-              sp.saveDataToFirestore().then((value) => sp
-                  .saveDataToSharedPreferences()
-                  .then((value) => sp.setSignIn().then((value) {
-                        facebookController.success();
-                        // handleAfterSignIn();
-                      })));
-            }
-          });
+      // Perform Facebook login
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success && result.accessToken != null) {
+        print("Facebook login successful, fetching profile...");
+        final graphResponse = await http.get(Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture.width(800).height(800),first_name,last_name,email&access_token=${result.accessToken!.token}'));
+
+        final profile = jsonDecode(graphResponse.body);
+
+        print("Profile fetched: $profile");
+
+        try {
+          final userData = {
+            'us_username': profile['name'],
+            'us_name': profile['name'],
+            'us_email': profile['email'],
+            'us_facebookid': profile['id'],
+            'us_is_active': true,
+            'us_created_at': DateTime.now().toIso8601String(),
+          };
+
+          print("Sending user data to backend...");
+          final response = await http.post(
+            Uri.parse('${Environment.baseUrl}Auth/FacebookSignUp'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode(userData),
+          );
+
+          if (response.statusCode == 200) {
+            var userId = jsonDecode(response.body)['us_user_id'];
+            final preferences = await SharedPreferences.getInstance();
+            await preferences.setString('us_username', profile['name']);
+            await preferences.setString('us_email', profile['email']);
+            await preferences.setString('us_googleId', profile['id']);
+            await preferences.setString('IsLoged', 'true');
+            await preferences.setString('UserId', userId.toString());
+
+            Get.toNamed(AppRoutes.BrandsPage);
+            facebookController.stop();
+          } else {
+            ToastService.showErrorToast(context,
+                message: translationController.GetMessages(15));
+
+            facebookController.stop();
+          }
+        } on FirebaseAuthException catch (e) {
+          ToastService.showErrorToast(context,
+              message: translationController.GetMessages(15));
+          facebookController.stop();
         }
-      });
+      } else {
+        ToastService.showErrorToast(context,
+            message: translationController.GetMessages(15));
+        facebookController.stop();
+      }
+    } catch (e) {
+      ToastService.showErrorToast(context,
+          message: translationController.GetMessages(15));
+      throw e;
     }
   }
 
-  // handle after signin
-  // handleAfterSignIn() {
-  //   Future.delayed(const Duration(milliseconds: 1000)).then((value) {
-  //     // nextScreenReplace(context, const HomeScreen());
-  //   });
-  // }
+  Future<void> signInWithFacebook(BuildContext context) async {
+    try {
+      // Log the start of the process
+      facebookController.start();
+
+      // Perform Facebook login
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success && result.accessToken != null) {
+        print("Facebook login successful, fetching profile...");
+        final graphResponse = await http.get(Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture.width(800).height(800),first_name,last_name,email&access_token=${result.accessToken!.token}'));
+
+        final profile = jsonDecode(graphResponse.body);
+
+        print("Profile fetched: $profile");
+
+        try {
+          final userData = {
+            'us_username': profile['name'],
+            'us_name': profile['name'],
+            'us_email': profile['email'],
+            'us_facebookid': profile['id'],
+            'us_is_active': true,
+            'us_created_at': DateTime.now().toIso8601String(),
+          };
+
+          final response = await http.post(
+            Uri.parse('${Environment.baseUrl}Auth/FacebookSignIn'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode(userData),
+          );
+
+          if (response.statusCode == 200) {
+            var userId = jsonDecode(response.body)['us_user_id'];
+            final preferences = await SharedPreferences.getInstance();
+            await preferences.setString('us_username', profile['name']);
+            await preferences.setString('us_email', profile['email']);
+            await preferences.setString('us_googleId', profile['id']);
+            await preferences.setString('IsLoged', 'true');
+            await preferences.setString('UserId', userId.toString());
+
+            Get.toNamed(AppRoutes.BrandsPage);
+            facebookController.stop();
+          } else {
+            ToastService.showErrorToast(context,
+                message: translationController.GetMessages(15));
+            facebookController.stop();
+          }
+        } on FirebaseAuthException catch (e) {
+          ToastService.showErrorToast(context,
+              message: translationController.GetMessages(15));
+          facebookController.stop();
+          throw e;
+        }
+      } else {
+        ToastService.showErrorToast(context,
+            message: translationController.GetMessages(15));
+        facebookController.stop();
+      }
+    } catch (e) {
+      print('Exception: $e');
+      throw e;
+    }
+  }
 
   @override
   GoToPageRegistrationPage() {
@@ -295,7 +380,6 @@ Future<bool> verifyOTP(String verificationId, String otp) async {
   GoToPageLoginPage() {
     Get.offAllNamed(AppRoutes.LoginPage);
   }
-  
 
   @override
   GoToHomePage() {

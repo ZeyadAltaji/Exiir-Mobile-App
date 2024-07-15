@@ -70,7 +70,7 @@ class DetailsContentWidget extends StatelessWidget {
                   SizedBox(height: 1.h),
                   Row(
                     children: [
-                      SizedBox(width: 3.w, height: 14.h),
+                      SizedBox(width: 3.w, height: 16.h),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -112,8 +112,11 @@ class DetailsContentWidget extends StatelessWidget {
                                 : fontEn.copyWith(
                                     fontSize: 6.f, color: Appcolors.white),
                           ),
+                                                SizedBox(width: 10.w),
+
                         ],
                       ),
+
                     ],
                   ),
                 ],
@@ -122,7 +125,7 @@ class DetailsContentWidget extends StatelessWidget {
           ),
           // Scrollable body
           Positioned.fill(
-            top: 22.h,
+            top: 26.h,
             child: Container(
               decoration: BoxDecoration(
                 color: Appcolors.white,

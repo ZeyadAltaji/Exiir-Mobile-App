@@ -13,11 +13,11 @@ void showOfflineDialog() {
   String content;
   String BtnText;
 
-  if (langcode == 'ar') {
+  if (Get.locale?.languageCode == 'ar') {
     title = 'حالة الاتصال';
     content = 'أنت غير متصل';
     BtnText = 'حسنا';
-  } else if (langcode == 'en') {
+  } else if (Get.locale?.languageCode == 'en') {
     title = 'Connectivity Status';
     content = 'You are offline';
     BtnText = 'OK';

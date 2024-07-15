@@ -31,7 +31,7 @@ dependencies:
   carousel_slider: ^4.2.1
   rounded_loading_button_plus: ^3.0.1
   font_awesome_flutter: ^10.7.0
-  flutter_facebook_auth: ^7.0.1
+  flutter_facebook_auth: '^3.5.0'
   google_sign_in: ^6.2.1
   twitter_login: ^4.4.2
   sign_in_with_apple: ^6.1.1
@@ -43,6 +43,8 @@ dependencies:
   flutter_local_notifications: ^17.2.1
   anim_search_bar: ^2.0.3
   table_calendar: ^3.1.2
+  custom_info_window: ^1.0.1
+  toasty_box: ^1.0.4
  
 dev_dependencies:
   flutter_test:
@@ -82,14 +84,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-flutter_launcher_icons:
-  image_path_android: "assets/image/ic_launcher.png"
-  image_path_ios: "assets/image/ic_launcher.png"
-  android: true # can specify file name here e.g. "ic_launcher"
-  ios: true # can specify file name here e.g. "My-Launcher-Icon"
-  # adaptive_icon_background: "assets/image/ic_launcher.png" # only available for Android 8.0 devices and above
-  # adaptive_icon_foreground: "assets/image/ic_launcher.png" # only available for Android 8.0 devices and above
-  # adaptive_icon_monochrome: "assets/image/ic_launcher.png" # only available for Android 13 devices and above
-  min_sdk_android: 21 
-  remove_alpha_ios: true
-  background_color_ios: "#ffffff"
+

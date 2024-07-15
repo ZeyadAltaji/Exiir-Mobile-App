@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "exiir3",
+            "name": "ExiirEV",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "exiir3 (profile mode)",
+            "name": "ExiirEV (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "exiir3 (release mode)",
+            "name": "ExiirEV (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

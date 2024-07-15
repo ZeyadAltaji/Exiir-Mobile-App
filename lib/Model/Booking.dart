@@ -4,7 +4,7 @@ class Booking {
   DateTime? EndBookingDate;
 
   String TripType;
-  int BookingTime;
+  String BookingTime;
   int Duration;
   bool IsAvailable;
   int StationId;

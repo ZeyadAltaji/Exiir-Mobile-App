@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ExiirEV/Core/Constant/SizeConfig.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:ExiirEV/Bindings/intialbindings.dart';
 import 'package:ExiirEV/Controller/ConnectivityController.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LocaleController controller = Get.put(LocaleController());
+    SizeConfig().init(context);
     return GetMaterialApp(
       locale: controller.language,
       debugShowCheckedModeBanner: false,

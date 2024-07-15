@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ExiirEV/Core/Functions/helper.dart';
+import 'package:sizer_pro/sizer.dart';
 
 class SearchWidget extends StatelessWidget {
   final double? currentExplorePercent;
@@ -13,6 +14,7 @@ class SearchWidget extends StatelessWidget {
   final Function(DragUpdateDetails)? onHorizontalDragUpdate;
 
   final Function()? onPanDown;
+  final double offsetX;
 
   const SearchWidget(
       {Key? key,
@@ -20,6 +22,7 @@ class SearchWidget extends StatelessWidget {
       this.currentSearchPercent,
       this.animateSearch,
       this.isSearchOpen,
+      required this.offsetX,
       this.onHorizontalDragUpdate,
       this.onPanDown})
       : super(key: key);
@@ -27,10 +30,10 @@ class SearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: realH(53),
-      right: realW((68.0 - 320) -
-          (68.0 * currentExplorePercent!) +
-          (347 - 68.0) * currentSearchPercent!),
+      bottom: 26.0.h,
+      right: realW((68.0 - offsetX) -
+          (offsetX * currentExplorePercent!) +
+          (347 - offsetX-500) * currentSearchPercent!),
       child: GestureDetector(
         onTap: () {
           animateSearch!(!isSearchOpen!);
@@ -41,20 +44,23 @@ class SearchWidget extends StatelessWidget {
           _dispatchSearchOffset();
         },
         child: Container(
-          width: realW(320),
-          height: realH(71),
+          width: 21.0.w,
+          height: 10.0.h,
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: realW(17)),
+          padding: EdgeInsets.only(left: 3.0.w),
           child: Opacity(
             opacity: 1.0 - currentSearchPercent!,
             child: Icon(
               Icons.search,
-              size: realW(34),
+              size: 10.0.w,
             ),
           ),
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(realW(36))),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(36.0.w),
+                topLeft: Radius.circular(36.0.w),
+              ),
               boxShadow: [
                 BoxShadow(
                     color: Color.fromRGBO(0, 0, 0, 0.3), blurRadius: realW(36)),

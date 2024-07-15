@@ -1,3 +1,4 @@
+import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ExiirEV/Controller/ModelsController.dart';
@@ -17,7 +18,7 @@ class ModelsPage extends StatelessWidget {
         Get.put(TranslationController());
     final size = MediaQuery.of(context).size;
     final double padding = size.width * 0.04;
-     final double crossAxisSpacing = size.width * 0.04;
+    final double crossAxisSpacing = size.width * 0.04;
     final double mainAxisSpacing = size.height * 0.04;
     TextEditingController textController = TextEditingController();
 
@@ -87,7 +88,7 @@ class ModelsPage extends StatelessWidget {
                     textController.clear();
                     controller.searchText.value = '';
                   },
-                  helpText:  translationController.getLanguage(87),
+                  helpText: translationController.getLanguage(87),
                   searchIconColor: Appcolors.Black,
                   autoFocus: true,
                   closeSearchOnSuffixTap: true,
@@ -120,26 +121,40 @@ class ModelsPage extends StatelessWidget {
                         )
                       : Padding(
                           padding: const EdgeInsets.all(16.0),
-                           child: GridView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: size.width < 500 ? 2 : 3,
-                            crossAxisSpacing: crossAxisSpacing,
-                            mainAxisSpacing: mainAxisSpacing,
-                            childAspectRatio: 1 / 1.47,
-                          ),
-                           itemCount: controller.filteredModels.length,
+                          child: GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: size.width < 500 ? 2 : 3,
+                              crossAxisSpacing: crossAxisSpacing,
+                              mainAxisSpacing: mainAxisSpacing,
+                              childAspectRatio: 1 / 1.14,
+                            ),
+                            itemCount: controller.filteredModels.length,
                             itemBuilder: (context, index) {
-                            final models = controller.filteredModels[index];
-                            return GestureDetector(
-                              onTap: () {},
-                              child: buildModels(models, index, size, crossAxisSpacing, mainAxisSpacing),
-                            );
-                          },
-                            
+                              final models = controller.filteredModels[index];
+                              return GestureDetector(
+                                onTap: () {},
+                                child: buildModels(models, index, size,
+                                    crossAxisSpacing, mainAxisSpacing),
+                              );
+                            },
                           ),
                         ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.offNamed(AppRoutes.HomePage);
+                  },
+                  child: Text(
+                    translationController.getLanguage(110),
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             ],
