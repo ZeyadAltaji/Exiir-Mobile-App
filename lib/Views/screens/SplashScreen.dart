@@ -56,7 +56,6 @@ class _SplashScreen extends State<SplashScreen>
             Text(
               translationController.getLanguage(1),
               style: const TextStyle(
-                  fontStyle: FontStyle.italic,
                   color: Appcolors.white,
                   fontSize: 32),
             )

@@ -6,15 +6,19 @@ import 'package:ExiirEV/Model/Models.dart';
 import 'package:get/get.dart';
 
 class ModelsController extends BaseController {
-Request request = Get.find();
+  Request request = Get.find();
   List<Models> lModels = [];
   RxList<Models> filteredModels = <Models>[].obs;
   RxString searchText = ''.obs;
   StatusRequest statusRequests = StatusRequest.loading;
   int? brandId;
-
-  ModelsController({required this.brandId});
-
+  String? stationId;
+  String? type;
+  ModelsController({
+    required this.brandId,
+    this.stationId,
+    this.type,
+  });
   @override
   void onInit() {
     super.onInit();
@@ -24,7 +28,8 @@ Request request = Get.find();
 
   fetchModels() async {
     statusRequest = StatusRequest.loading;
-    var response = await request.getData('ExiirManagementAPI/GetModelsById/$brandId');
+    var response =
+        await request.getData('ExiirManagementAPI/GetModelsById/$brandId');
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
       var data = response.fold((l) => null, (r) => r);
@@ -43,7 +48,8 @@ Request request = Get.find();
         final brNameLower = models.moName!.toLowerCase();
         final brNameArLower = models.moNameAr!.toLowerCase();
         final searchLower = searchText.value.toLowerCase();
-        return brNameLower.contains(searchLower) || brNameArLower.contains(searchLower);
+        return brNameLower.contains(searchLower) ||
+            brNameArLower.contains(searchLower);
       }).toList());
     }
   }

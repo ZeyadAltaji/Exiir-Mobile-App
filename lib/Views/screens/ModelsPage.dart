@@ -12,8 +12,15 @@ class ModelsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ModelsController controller =
-        Get.put(ModelsController(brandId: Get.arguments));
+    final arguments = Get.arguments as Map<String, dynamic>;
+
+    final ModelsController controller = Get.put(
+      ModelsController(
+        brandId: arguments['brandId'],
+        stationId: arguments['stationId'],
+        type: arguments['type'],
+      ),
+    );
     final TranslationController translationController =
         Get.put(TranslationController());
     final size = MediaQuery.of(context).size;
@@ -21,8 +28,31 @@ class ModelsPage extends StatelessWidget {
     final double crossAxisSpacing = size.width * 0.04;
     final double mainAxisSpacing = size.height * 0.04;
     TextEditingController textController = TextEditingController();
-
+    textController.addListener(() {
+      controller.searchText.value = textController.text;
+    });
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Appcolors.logotwo,
+        title: Text(
+          textAlign: TextAlign.center,
+          translationController.getLanguage(90),
+          style: const TextStyle(
+            color: Appcolors.Black,
+            fontSize: 27,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            color: Appcolors.Black,
+            onPressed: () {
+              Get.offAllNamed(AppRoutes.HomePage);
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
@@ -38,65 +68,26 @@ class ModelsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        border: Border.all(
-                          color: Colors.grey[300]!,
-                          width: 1,
-                        ),
-                      ),
-                      child: Icon(
-                        Get.locale!.languageCode == 'ar'
-                            ? Icons.keyboard_arrow_right
-                            : Icons.keyboard_arrow_left,
-                        color: Colors.black,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        translationController.getLanguage(90),
-                        style: const TextStyle(
-                          color: Appcolors.Black,
-                          fontSize: 27,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 45),
-                ],
-              ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: AnimSearchBar(
-                  width: 440,
-                  textController: textController,
-                  onSuffixTap: () {
-                    textController.clear();
-                    controller.searchText.value = '';
-                  },
-                  helpText: translationController.getLanguage(87),
-                  searchIconColor: Appcolors.Black,
-                  autoFocus: true,
-                  closeSearchOnSuffixTap: true,
-                  animationDurationInMilli: 1500,
-                  rtl: true,
-                  onSubmitted: (String value) {
-                    controller.searchText.value = value;
-                  },
+                padding: const EdgeInsets.only(top: 16.0, bottom: 0.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: AnimSearchBar(
+                    width: 400,
+                    textController: textController,
+                    onSuffixTap: () {
+                      textController.clear();
+                    },
+                    helpText: translationController.getLanguage(87),
+                    searchIconColor: Appcolors.Black,
+                    autoFocus: true,
+                    closeSearchOnSuffixTap: true,
+                    animationDurationInMilli: 1500,
+                    rtl: true,
+                    onSubmitted: (String value) {
+                      // Empty implementation
+                    },
+                  ),
                 ),
               ),
               Expanded(
@@ -137,24 +128,11 @@ class ModelsPage extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () {},
                                 child: buildModels(models, index, size,
-                                    crossAxisSpacing, mainAxisSpacing),
+                                    crossAxisSpacing, mainAxisSpacing, controller.stationId,controller.type),
                               );
                             },
                           ),
                         ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.offNamed(AppRoutes.HomePage);
-                  },
-                  child: Text(
-                    translationController.getLanguage(110),
-                    style: const TextStyle(fontSize: 16),
-                  ),
                 ),
               ),
             ],

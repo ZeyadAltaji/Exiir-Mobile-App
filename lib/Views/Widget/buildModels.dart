@@ -1,4 +1,3 @@
- 
 import 'dart:ui';
 
 import 'package:ExiirEV/Controller/TranslationController.dart';
@@ -9,17 +8,18 @@ import 'package:ExiirEV/Views/screens/VersionsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget buildModels(Models models, int? index, Size? size, double crossAxisSpacing,
-    double mainAxisSpacing) {
+Widget buildModels(Models models, int? index, Size? size,
+    double crossAxisSpacing, double mainAxisSpacing, String? stationId, String? type) {
   final translationController = Get.put(TranslationController());
 
   return GestureDetector(
     onTap: () {
-Get.to(() => VersionsPage(), arguments: {'moId': models.moId, 'moBrandId': models.moBrandId});
+      Get.to(() => VersionsPage(),
+          arguments: {'moId': models.moId, 'moBrandId': models.moBrandId,'stationId':stationId ,'type':type});
     },
     child: Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Appcolors.white,
         borderRadius: BorderRadius.circular(15),
       ),
       padding: EdgeInsets.all(size!.width * 0.04),
@@ -40,6 +40,7 @@ Get.to(() => VersionsPage(), arguments: {'moId': models.moId, 'moBrandId': model
           ),
           SizedBox(height: size.height * 0.01),
           Text(
+            textAlign: TextAlign.center,
             translationController.Translate(models.moNameAr!, models.moName!),
             style: TextStyle(
               fontSize: size.width * 0.04,
@@ -54,4 +55,3 @@ Get.to(() => VersionsPage(), arguments: {'moId': models.moId, 'moBrandId': model
     ),
   );
 }
-

@@ -52,7 +52,7 @@ class AccountControllerImp extends AccountController {
           await googleUser?.authentication;
 
       if (googleAuth != null) {
-        final credential = GoogleAuthProvider.credential(
+        GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
@@ -78,8 +78,8 @@ class AccountControllerImp extends AccountController {
 
           final preferences = await SharedPreferences.getInstance();
           preferences.setString('us_username', googleUser!.displayName!);
-          preferences.setString('us_email', googleUser!.email);
-          preferences.setString('us_googleId', googleUser!.id);
+          preferences.setString('us_email', googleUser.email);
+          preferences.setString('us_googleId', googleUser.id);
           preferences.setString('IsLoged', 'true');
           preferences.setString('UserId', UserId.toString());
 
@@ -114,7 +114,7 @@ class AccountControllerImp extends AccountController {
           await googleUser?.authentication;
 
       if (googleAuth != null) {
-        final credential = GoogleAuthProvider.credential(
+        GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
@@ -140,8 +140,8 @@ class AccountControllerImp extends AccountController {
           var UserId = jsonDecode(response.body)['us_user_id'];
           final preferences = await SharedPreferences.getInstance();
           preferences.setString('us_username', googleUser!.displayName!);
-          preferences.setString('us_email', googleUser!.email);
-          preferences.setString('us_googleId', googleUser!.id);
+          preferences.setString('us_email', googleUser.email);
+          preferences.setString('us_googleId', googleUser.id);
           preferences.setString('IsLoged', 'true');
           preferences.setString('UserId', UserId.toString());
 

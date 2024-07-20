@@ -30,7 +30,7 @@ class SearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 26.0.h,
+                  bottom: -75.0.h + screenHeight,
       right: realW((68.0 - offsetX) -
           (offsetX * currentExplorePercent!) +
           (347 - offsetX-500) * currentSearchPercent!),

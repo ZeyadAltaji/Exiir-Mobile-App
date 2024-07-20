@@ -1,6 +1,9 @@
 class ListCars {
   int? us_user_id;
   int? mo_id;
+  int? br_id;
+  int? ve_id;
+
   String? br_name_ar;
   String? br_name;
   String? br_logo;
@@ -11,6 +14,8 @@ class ListCars {
   ListCars(
       {this.us_user_id,
       this.mo_id,
+      this.br_id,
+      this.ve_id,
       this.br_name_ar,
       this.br_name,
       this.br_logo,
@@ -21,6 +26,9 @@ class ListCars {
   ListCars.fromJson(Map<String, dynamic> json) {
     us_user_id = json['us_user_id'];
     mo_id = json['mo_id'];
+    br_id = json['br_id'];
+    ve_id = json['ve_id'];
+
     br_name_ar = json['br_name_ar'];
     br_name = json['br_name'];
     br_logo = json['br_logo'];

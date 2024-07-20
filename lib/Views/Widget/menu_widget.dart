@@ -1,11 +1,14 @@
-import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
+import 'package:ExiirEV/Controller/AccountController.dart';
+import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Views/Widget/TextSignUp.dart';
 import 'package:flutter/material.dart';
+import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
 import 'package:ExiirEV/Core/Functions/helper.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Drawer Menu
-class MenuWidget extends StatelessWidget {
-  final menuItems = ['Home', 'logout'];
-
+class MenuWidget extends StatefulWidget {
   final double? currentMenuPercent;
   final Function(bool)? animateMenu;
 
@@ -13,15 +16,41 @@ class MenuWidget extends StatelessWidget {
       : super(key: key);
 
   @override
+  _MenuWidgetState createState() => _MenuWidgetState();
+}
+
+class _MenuWidgetState extends State<MenuWidget> {
+  int? selectedIndex;
+  final translationController = Get.put(TranslationController());
+  final accountController = Get.put(AccountControllerImp());
+
+  late List<String> menuItems;
+  @override
+  void initState() {
+    super.initState();
+    menuItems = [
+      translationController.getLanguage(112),
+      translationController.getLanguage(121),
+      translationController.getLanguage(122),
+      translationController.getLanguage(123),
+    ];
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    final preferences = await SharedPreferences.getInstance();
+    preferences.clear(); // Clear all SharedPreferences data
+    Navigator.pushReplacementNamed(context, '/login'); // Example route
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return currentMenuPercent != 0
+    return widget.currentMenuPercent != 0
         ? Positioned(
- 
-            left: realW(-358 + 358 * currentMenuPercent!),
+            left: realW(-358 + 358 * widget.currentMenuPercent!),
             width: realW(358),
             height: screenHeight,
             child: Opacity(
-              opacity: currentMenuPercent!,
+              opacity: widget.currentMenuPercent!,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -75,55 +104,99 @@ class MenuWidget extends StatelessWidget {
                                       height: realH(72),
                                     ),
                                   ),
-                                  Positioned(
-                                    left: realW(135),
-                                    top: realH(110),
-                                    child: DefaultTextStyle(
-                                      style: TextStyle(color: Colors.white),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            "test",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: realW(18)),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: realH(11.0)),
-                                            child: FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text.rich(
-                                                TextSpan(
-                                                  text: "test",
+                                  FutureBuilder<SharedPreferences>(
+                                    future: SharedPreferences.getInstance(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        final prefs = snapshot.data;
+                                        final isLoggedIn =
+                                            prefs?.getString('IsLoged') ==
+                                                'true';
+                                        return isLoggedIn
+                                            ? Positioned(
+                                                left: realW(135),
+                                                top: realH(110),
+                                                child: DefaultTextStyle(
                                                   style: TextStyle(
-                                                      fontSize: realW(16),
-                                                      decoration: TextDecoration
-                                                          .underline),
+                                                      color: Colors.white),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        prefs?.getString(
+                                                                'us_username') ??
+                                                            'Guest',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize:
+                                                                realW(18)),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: realH(
+                                                                    11.0)),
+                                                        child: FittedBox(
+                                                          fit: BoxFit.scaleDown,
+                                                          child: Text.rich(
+                                                            TextSpan(
+                                                              text:
+                                                                 translationController.getLanguage(124),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      realW(16),
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .underline),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              Text(
-                                                "test",
-                                                style: TextStyle(
-                                                    fontSize: realW(14)),
-                                              ),
-                                              Icon(
-                                                Icons.arrow_right,
-                                                color: Colors.white,
-                                                size: realH(30),
                                               )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                            : Positioned(
+                                                left: realW(135),
+                                                top: realH(135),
+                                                child: DefaultTextStyle(
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Textsignup(
+                                                        textone:
+                                                            translationController
+                                                                .getLanguage(
+                                                                    79),
+                                                        textTow:
+                                                            translationController
+                                                                .getLanguage(5),
+                                                        onTap: () {
+                                                          accountController
+                                                              .GoToPageLoginPage();
+                                                        },
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                      } else {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
@@ -136,44 +209,44 @@ class MenuWidget extends StatelessWidget {
                                 right: realW(37)),
                             sliver: SliverFixedExtentList(
                               itemExtent: realH(56),
-                              delegate: new SliverChildBuilderDelegate(
+                              delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
-                                return Container(
-                                  width: realW(321),
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.only(left: realW(20)),
-                                  decoration: index == 0
-                                      ? BoxDecoration(
-                                          color: Color(0xFF379BF2)
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.only(
-                                              topRight:
-                                                  Radius.circular(realW(50)),
-                                              bottomRight:
-                                                  Radius.circular(realW(50))))
-                                      : null,
-                                  child: Text(
-                                    menuItems[index],
-                                    style: TextStyle(
-                                        color: index == 0
-                                            ? Colors.blue
-                                            : Colors.black,
-                                        fontSize: realW(20)),
+                                final isSelected = selectedIndex == index;
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIndex = index;
+                                    });
+                                    if (index == menuItems.length - 1) {
+                                      _signOut(context);
+                                    }
+                                  },
+                                  child: Container(
+                                    width: realW(321),
+                                    alignment: Alignment.centerLeft,
+                                    padding: EdgeInsets.only(left: realW(20)),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? Color(0xFF379BF2).withOpacity(0.2)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(realW(50)),
+                                          bottomRight:
+                                              Radius.circular(realW(50))),
+                                    ),
+                                    child: Text(
+                                      menuItems[index],
+                                      style: TextStyle(
+                                          color: isSelected
+                                              ? Color(0xFF379BF2)
+                                              : Colors.black,
+                                          fontSize: realW(20)),
+                                    ),
                                   ),
                                 );
                               }, childCount: menuItems.length),
                             ),
                           ),
-                          SliverPadding(
-                            padding: EdgeInsets.only(left: realW(20)),
-                            sliver: SliverToBoxAdapter(
-                              child: Text(
-                                'Settings',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: realW(20)),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
@@ -183,7 +256,7 @@ class MenuWidget extends StatelessWidget {
                       right: 0,
                       child: GestureDetector(
                         onTap: () {
-                          animateMenu!(false);
+                          widget.animateMenu!(false);
                         },
                         child: Container(
                           width: realW(71),

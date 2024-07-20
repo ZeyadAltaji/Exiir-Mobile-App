@@ -23,39 +23,57 @@ class GlobalMiddleware extends GetMiddleware {
     return preferences.getString('UserId');
   }
 
-Future<bool> userHasCars(String userId) async {
-  try {
-    final response = await http.get(Uri.parse('${Environment.baseUrl}ExiirManagementAPI/HasCars/$userId'));
-    
-    if (response.statusCode == 200) {
-      return json.decode(response.body) as bool;
-    } else {
-      // Handle non-200 status codes if needed
+  Future<bool> userHasCars(String userId) async {
+    try {
+      final response = await http.get(Uri.parse(
+          '${Environment.baseUrl}ExiirManagementAPI/HasCars/$userId'));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body) as bool;
+      } else {
+        // Handle non-200 status codes if needed
+        return false;
+      }
+    } catch (e) {
+      // Handle exceptions, such as ClientException
+      print('Error fetching user cars: $e');
       return false;
     }
-  } catch (e) {
-    // Handle exceptions, such as ClientException
-    print('Error fetching user cars: $e');
-    return false;
   }
-}
-
 
   void redirectToCorrectPage() async {
+    final stationId = Get.parameters['stationId'];
+
     final loggedIn = await isLoggedIn();
     if (!loggedIn) {
-    return  Get.offNamed(AppRoutes.LoginPage);
+      final String route = stationId != null
+          ? '${AppRoutes.LoginPage}?stationId=$stationId'
+          : AppRoutes.LoginPage;
+
+      return Get.offNamed(route);
     } else {
       final userId = await getUserId();
       if (userId != null) {
         final hasCars = await userHasCars(userId);
         if (hasCars) {
-        return  Get.offNamed(AppRoutes.ListandAddnewCars);
+          final String route = stationId != null
+              ? '${AppRoutes.ListandAddnewCars}?stationId=$stationId'
+              : AppRoutes.ListandAddnewCars;
+
+          return Get.offNamed(route);
         } else {
-         return Get.offNamed(AppRoutes.BrandsPage);
+          final String route = stationId != null
+              ? '${AppRoutes.BrandsPage}?stationId=$stationId'
+              : AppRoutes.BrandsPage;
+
+          return Get.offNamed(route);
         }
       } else {
-      return  Get.offNamed(AppRoutes.LoginPage);
+        final String route = stationId != null
+            ? '${AppRoutes.LoginPage}?stationId=$stationId'
+            : AppRoutes.LoginPage;
+
+        return Get.offAllNamed(route);
       }
     }
   }

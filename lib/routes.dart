@@ -13,7 +13,7 @@ import 'package:ExiirEV/Views/screens/home_page.dart';
 import 'package:get/get.dart';
 
 List<GetPage<dynamic>> routes = [
-  GetPage(name: '/', page: () => BookingPage()),
+  GetPage(name: '/', page: () => SplashScreen()),
   GetPage(name: AppRoutes.HomePage, page: () => HomePage()),
   GetPage(name: AppRoutes.LoginPage, page: () => const LoginPage()),
   GetPage(

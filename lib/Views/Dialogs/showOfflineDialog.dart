@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Core/Services/MyServices.dart';
+import '../../Core/Constant/ImgaeAssets.dart';
 
 void showOfflineDialog() {
   MyServices services = Get.find();
@@ -11,35 +12,101 @@ void showOfflineDialog() {
 
   String title;
   String content;
-  String BtnText;
+  String btnText;
 
   if (Get.locale?.languageCode == 'ar') {
     title = 'حالة الاتصال';
-    content = 'أنت غير متصل';
-    BtnText = 'حسنا';
+    content = ' أنت غير متصل بالانترنت';
+    btnText = 'حسنا';
   } else if (Get.locale?.languageCode == 'en') {
     title = 'Connectivity Status';
     content = 'You are offline';
-    BtnText = 'OK';
+    btnText = 'OK';
   } else {
     title = 'Connectivity Status';
     content = 'You are offline';
-    BtnText = 'OK';
+    btnText = 'OK';
   }
 
-  if (Get.isDialogOpen != true) {
+  if (!Get.isDialogOpen!) {
     Get.dialog(
-      AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => exit(0),
-            child: Text(BtnText),
+      dialogshow(
+        title: title,
+        content: content,
+        btnText: btnText,
+      ),
+    );
+  }
+}
+
+class dialogshow extends StatelessWidget {
+  final String title;
+  final String content;
+  final String btnText;
+
+  dialogshow({
+    required this.title,
+    required this.content,
+    required this.btnText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Container(
+            height: 150,
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  content,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          exit(0); // Close the dialog
+                        },
+                        child: Text(btnText),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: -50,
+            child: CircleAvatar(
+              radius: 50,
+              child: Image.asset(AppimageUrlAsset.logo),
+              backgroundColor: Colors.transparent,
+            ),
           ),
         ],
       ),
-      barrierDismissible: false,
     );
   }
 }

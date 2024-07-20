@@ -1,14 +1,17 @@
 class StationsModels {
+  int ? stationId;
   String? stationsName;
   String? stationsPhone;
   String? x;
   String? y;
   String? address;
-  bool? available;
+  String? available;
   String? image;
 
   StationsModels(
-      {this.stationsName,
+      {
+      this.stationId,
+      this.stationsName,
       this.stationsPhone,
       this.x,
       this.y,

@@ -1,7 +1,6 @@
 import 'package:ExiirEV/Controller/VersionsController.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Views/Widget/buildVersions.dart';
-import 'package:ExiirEV/Views/screens/BookingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
@@ -13,12 +12,15 @@ class VersionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final arguments = Get.arguments as Map<String, int?>;
+    final arguments = Get.arguments as Map<String, dynamic>;
 
-   final VersionsController controller = Get.put(
+    final VersionsController controller = Get.put(
       VersionsController(
         ModelId: arguments['moId'],
         BrandId: arguments['moBrandId'],
+        stationId: arguments['stationId'],
+        type: arguments['type'],
+
       ),
     );
     final TranslationController translationController =
@@ -28,8 +30,31 @@ class VersionsPage extends StatelessWidget {
     final double crossAxisSpacing = size.width * 0.04;
     final double mainAxisSpacing = size.height * 0.04;
     TextEditingController textController = TextEditingController();
-
+    textController.addListener(() {
+      controller.searchText.value = textController.text;
+    });
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Appcolors.logotwo,
+        title: Text(
+          textAlign: TextAlign.center,
+          translationController.getLanguage(91).trim(),
+          style: const TextStyle(
+            color: Appcolors.Black,
+            fontSize: 27,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            color: Appcolors.Black,
+            onPressed: () {
+              Get.offNamed(AppRoutes.HomePage);
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
@@ -45,65 +70,26 @@ class VersionsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Container(
-                      width: 45,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        border: Border.all(
-                          color: Colors.grey[300]!,
-                          width: 1,
-                        ),
-                      ),
-                      child: Icon(
-                        Get.locale!.languageCode == 'ar'
-                            ? Icons.keyboard_arrow_right
-                            : Icons.keyboard_arrow_left,
-                        color: Colors.black,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        translationController.getLanguage(91),
-                        style: const TextStyle(
-                          color: Appcolors.Black,
-                          fontSize: 27,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 45),
-                ],
-              ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: AnimSearchBar(
-                  width: 440,
-                  textController: textController,
-                  onSuffixTap: () {
-                    textController.clear();
-                    controller.searchText.value = '';
-                  },
-                  helpText: translationController.getLanguage(87),
-                  searchIconColor: Appcolors.Black,
-                  autoFocus: true,
-                  closeSearchOnSuffixTap: true,
-                  animationDurationInMilli: 1500,
-                  rtl: true,
-                  onSubmitted: (String value) {
-                    controller.searchText.value = value;
-                  },
+                padding: const EdgeInsets.only(top: 16.0, bottom: 0.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: AnimSearchBar(
+                    width: 400,
+                    textController: textController,
+                    onSuffixTap: () {
+                      textController.clear();
+                    },
+                    helpText: translationController.getLanguage(87),
+                    searchIconColor: Appcolors.Black,
+                    autoFocus: true,
+                    closeSearchOnSuffixTap: true,
+                    animationDurationInMilli: 1500,
+                    rtl: true,
+                    onSubmitted: (String value) {
+                      // Empty implementation
+                    },
+                  ),
                 ),
               ),
               Expanded(
@@ -144,7 +130,7 @@ class VersionsPage extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () {},
                                 child: buildVersions(models, index, size,
-                                    crossAxisSpacing, mainAxisSpacing),
+                                    crossAxisSpacing, mainAxisSpacing,arguments['stationId'],arguments['type']),
                               );
                             },
                           ),
@@ -157,24 +143,16 @@ class VersionsPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     controller.SaveUserCars(controller.BrandId!, controller.ModelId!, 0);
-                    //   },
-                    //   child: Text(
-                    //     translationController.getLanguage(92),
-                    //     style: const TextStyle(fontSize: 16),
-                    //   ),
-                    // ),
                     ElevatedButton(
                       onPressed: () {
-                        Get.offNamed(AppRoutes.HomePage);
+                        controller.SaveUserCars(
+                            controller.BrandId!, controller.ModelId!, 0,arguments['stationId'],arguments['type']);
                       },
                       child: Text(
-                        translationController.getLanguage(110),
+                        translationController.getLanguage(92),
                         style: const TextStyle(fontSize: 16),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

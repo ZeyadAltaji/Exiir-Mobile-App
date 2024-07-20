@@ -335,7 +335,7 @@ class DetailsContentWidget extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                homeController.goToLoginPage();
+                homeController.goToLoginPage(station.stationId);
                },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),

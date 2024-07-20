@@ -12,6 +12,9 @@ class BrandsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stationId = Get.parameters['stationId'];
+    final type = Get.parameters['type'];
+
     final BrandsController controller = Get.put(BrandsController());
     final TranslationController translationController =
         Get.put(TranslationController());
@@ -20,7 +23,31 @@ class BrandsPage extends StatelessWidget {
     TextEditingController textController = TextEditingController();
     final double crossAxisSpacing = size.width * 0.04;
     final double mainAxisSpacing = size.height * 0.04;
+    textController.addListener(() {
+      controller.searchText.value = textController.text;
+    });
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Appcolors.logotwo,
+        title: Text(
+          textAlign: TextAlign.center,
+          translationController.getLanguage(86),
+          style: const TextStyle(
+            color: Appcolors.Black,
+            fontSize: 27,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            color: Appcolors.Black,
+            onPressed: () {
+              Get.offAllNamed(AppRoutes.HomePage);
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
@@ -40,33 +67,22 @@ class BrandsPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16.0, bottom: 0.0),
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Text(
-                    translationController.getLanguage(86),
-                    style: const TextStyle(
-                      color: Appcolors.Black,
-                      fontSize: 27,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: AnimSearchBar(
+                    width: 400,
+                    textController: textController,
+                    onSuffixTap: () {
+                      textController.clear();
+                    },
+                    helpText: translationController.getLanguage(87),
+                    searchIconColor: Appcolors.Black,
+                    autoFocus: true,
+                    closeSearchOnSuffixTap: true,
+                    animationDurationInMilli: 1500,
+                    rtl: true,
+                    onSubmitted: (String value) {
+                      // Empty implementation
+                    },
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                child: AnimSearchBar(
-                  width: 400,
-                  textController: textController,
-                  onSuffixTap: () {
-                    textController.clear();
-                  },
-                  helpText: translationController.getLanguage(87),
-                  searchIconColor: Appcolors.Black,
-                  autoFocus: true,
-                  closeSearchOnSuffixTap: true,
-                  animationDurationInMilli: 1500,
-                  rtl: true,
-                  onSubmitted: (String value) {
-                    controller.searchText.value = value;
-                  },
                 ),
               ),
               Expanded(
@@ -109,26 +125,13 @@ class BrandsPage extends StatelessWidget {
                             return GestureDetector(
                               onTap: () {},
                               child: buildbrand(brand, index, size,
-                                  crossAxisSpacing, mainAxisSpacing),
+                                  crossAxisSpacing, mainAxisSpacing,stationId,type),
                             );
                           },
                         ),
                       );
                     }
                   },
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.offNamed(AppRoutes.HomePage);
-                  },
-                  child: Text(
-                    translationController.getLanguage(110),
-                    style: const TextStyle(fontSize: 16),
-                  ),
                 ),
               ),
             ],

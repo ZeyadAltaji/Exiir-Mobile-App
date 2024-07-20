@@ -47,8 +47,8 @@ class BrandsController extends BaseController {
         final brNameLower = brand.brName!.toLowerCase();
         final brNameArLower = brand.brNameAr!.toLowerCase();
         final searchLower = searchText.value.toLowerCase();
-        return brNameLower.contains(searchLower) ||
-            brNameArLower.contains(searchLower);
+        return brNameLower.startsWith(searchLower) ||
+            brNameArLower.startsWith(searchLower);
       }).toList();
     }
   }

@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  convex_bottom_bar:
+    dependency: "direct main"
+    description:
+      name: convex_bottom_bar
+      sha256: ebf0f3deb1e8e99374d844fee7485d2980ec502dedfaad395c12118477933aef
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   crypto:
     dependency: transitive
     description:
@@ -1026,14 +1034,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  twitter_login:
-    dependency: "direct main"
-    description:
-      name: twitter_login
-      sha256: "31ff9db2e37eda878b876a4ce6d1525f51d34b6cd9de9aa185b07027a23ab95b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.4.2"
   typed_data:
     dependency: transitive
     description:

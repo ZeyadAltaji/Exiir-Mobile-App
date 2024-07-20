@@ -72,7 +72,7 @@ class DropDownbutton extends StatelessWidget {
           padding: EdgeInsets.only(left: 3.0.w),
           child: Icon(
             icon,
-            size: 10.0.w,
+            size: 8.0.w,
             color: iconColor ?? Colors.black,
           ),
         ),
