@@ -75,7 +75,7 @@ class _ChargingStationModalState extends State<ChargingStationModal>
               child: Container(
                 padding: EdgeInsets.all(3.w),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient:const LinearGradient(
                     begin: Alignment.topCenter,
                     colors: [Appcolors.logotwo, Appcolors.logoone],
                   ),
@@ -126,7 +126,7 @@ class _ChargingStationModalState extends State<ChargingStationModal>
                         return homeController.filteredStations.isEmpty
                             ? Center(
                                 child: Text(
-                                  "${translationController.Translate('لا يوجد محطة بهذا الاسم', "There's no station that name.")} (${homeController.searchController.text})",
+                                  translationController.Translate('لا يوجد محطة بهذا الاسم', "There's no station that name."),
                                   style: TextStyle(
                                       color: Appcolors.white, fontSize: 3.5.h),
                                 ),
@@ -152,7 +152,7 @@ class _ChargingStationModalState extends State<ChargingStationModal>
                                       );
                                     },
                                     child: Container(
-                                      margin: EdgeInsets.symmetric(
+                                      margin:const EdgeInsets.symmetric(
                                           vertical: 8.0, horizontal: 16.0),
                                       decoration: BoxDecoration(
                                         border: Border.all(
@@ -180,8 +180,7 @@ class _ChargingStationModalState extends State<ChargingStationModal>
                                                     ),
                                                   ),
                                                   Text(
-                                                    "${translationController.getLanguage(16)}: ${station.address}" ??
-                                                        'No address available',
+                                                    "${translationController.getLanguage(16)}: ${station.address}",
                                                     style: TextStyle(
                                                       color: Appcolors.white
                                                           .withOpacity(0.7),

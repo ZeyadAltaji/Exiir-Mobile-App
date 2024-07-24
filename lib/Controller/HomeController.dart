@@ -364,7 +364,7 @@ class HomeController extends BaseController {
         final stationsNameLower = station.stationsName!.toLowerCase();
         final availableLower = station.available!.toLowerCase();
         final searchLower = searchText.value.toLowerCase();
-        return stationsNameLower.startsWith(searchLower) || availableLower.startsWith(searchLower);
+        return stationsNameLower.contains(searchLower) || availableLower.contains(searchLower);
       }).toList();
     }
   }

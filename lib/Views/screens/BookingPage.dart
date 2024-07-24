@@ -466,6 +466,10 @@ class _BookingPageState extends State<BookingPage> {
           'minute': minute,
           'duration': hours * 60 + minutes,
           'stationId': _selectedStation!,
+          'BookingType':
+              _selectedTrip.toString().split('.').last == 'Normal' ? 1 : 2,
+           'language':
+             Get.locale?.languageCode == 'ar' ? 1 : 2,
         }),
       );
 
@@ -476,18 +480,18 @@ class _BookingPageState extends State<BookingPage> {
         if (_isAvailable == true) {
           ToastService.showSuccessToast(
             context,
-            message: translationController.getLanguage(120),
+            message: translationController.getLanguage(jsonDecode(response.body)['outPutMSG']),
           );
         } else {
           ToastService.showWarningToast(
             context,
-            message: translationController.GetMessages(17),
+            message: translationController.GetMessages(jsonDecode(response.body)['outPutMSG']),
           );
         }
       } else {
         ToastService.showWarningToast(
           context,
-          message: translationController.GetMessages(18),
+          message: translationController.GetMessages(jsonDecode(response.body)['outPutMSG']),
         );
       }
     } catch (e) {

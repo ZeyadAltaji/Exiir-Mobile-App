@@ -334,9 +334,9 @@ class DetailsContentWidget extends StatelessWidget {
               ],
             ),
             GestureDetector(
-              onTap: () {
-                homeController.goToLoginPage(station.stationId);
-               },
+             onTap: station.available != translationController.getLanguage(64) ? () {
+                    homeController.goToLoginPage(station.stationId);
+                  } : null,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 decoration: BoxDecoration(
