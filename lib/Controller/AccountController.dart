@@ -60,6 +60,7 @@ class AccountControllerImp extends AccountController {
         // Prepare user data
         final userData = {
           'us_username': googleUser?.displayName,
+          'us_name': googleUser?.displayName,
           'us_email': googleUser?.email,
           'us_googleId': googleUser?.id,
           'us_is_active': true,
@@ -69,19 +70,29 @@ class AccountControllerImp extends AccountController {
         // Send data to your API
         final response = await http.post(
           Uri.parse('${Environment.baseUrl}Auth/GoogleSignIn'),
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            'KeyToken': Environment.keyToken
+          },
           body: json.encode(userData),
         );
 
         if (response.statusCode == 200) {
-          var UserId = jsonDecode(response.body)['us_user_id'];
+          final responseData = jsonDecode(response.body);
+          final userId = responseData['user']['us_user_id'];
+          final username = responseData['user']['us_username'];
+          final email = responseData['user']['us_email'];
+          final googleId = responseData['user']['us_googleId'];
+          final token = responseData['token'];
+ 
 
           final preferences = await SharedPreferences.getInstance();
-          preferences.setString('us_username', googleUser!.displayName!);
-          preferences.setString('us_email', googleUser.email);
-          preferences.setString('us_googleId', googleUser.id);
+          preferences.setString('us_username', username);
+          preferences.setString('us_email', email);
+          preferences.setString('us_googleId', googleId);
           preferences.setString('IsLoged', 'true');
-          preferences.setString('UserId', UserId.toString());
+          preferences.setString('UserId', userId.toString());
+          preferences.setString('token', token);
 
           Get.toNamed(AppRoutes.BrandsPage);
 
@@ -132,18 +143,27 @@ class AccountControllerImp extends AccountController {
         // Send data to your API
         final response = await http.post(
           Uri.parse('${Environment.baseUrl}Auth/GoogleSignUp'),
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            'KeyToken': Environment.keyToken
+          },
           body: json.encode(userData),
         );
 
         if (response.statusCode == 200) {
-          var UserId = jsonDecode(response.body)['us_user_id'];
+          final responseData = jsonDecode(response.body);
+          final userId = responseData['user']['us_user_id'];
+          final username = responseData['user']['us_username'];
+          final email = responseData['user']['us_email'];
+          final googleId = responseData['user']['us_googleId'];
+          final token = responseData['token'];
           final preferences = await SharedPreferences.getInstance();
-          preferences.setString('us_username', googleUser!.displayName!);
-          preferences.setString('us_email', googleUser.email);
-          preferences.setString('us_googleId', googleUser.id);
+          preferences.setString('us_username', username);
+          preferences.setString('us_email', email);
+          preferences.setString('us_googleId', googleId);
           preferences.setString('IsLoged', 'true');
-          preferences.setString('UserId', UserId.toString());
+          preferences.setString('UserId', userId.toString());
+          preferences.setString('token', token);
 
           Get.toNamed(AppRoutes.BrandsPage);
           googleController.stop();
@@ -173,6 +193,7 @@ class AccountControllerImp extends AccountController {
         Uri.parse('${Environment.baseUrl}Auth/SentOtp'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'KeyToken': Environment.keyToken
         },
         body: jsonEncode(<String, String>{
           'To': phoneNumber,
@@ -200,6 +221,7 @@ class AccountControllerImp extends AccountController {
         Uri.parse('${Environment.baseUrl}Auth/VerifyOtp'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'KeyToken': Environment.keyToken
         },
         body: jsonEncode(<String, String>{
           'verificationId': verificationId,
@@ -267,18 +289,31 @@ class AccountControllerImp extends AccountController {
           print("Sending user data to backend...");
           final response = await http.post(
             Uri.parse('${Environment.baseUrl}Auth/FacebookSignUp'),
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              'KeyToken': Environment.keyToken
+            },
             body: json.encode(userData),
           );
 
           if (response.statusCode == 200) {
-            var userId = jsonDecode(response.body)['us_user_id'];
+          final responseData = jsonDecode(response.body);
+          final userId = responseData['user']['us_user_id'];
+          final username = responseData['user']['us_username'];
+          final email = responseData['user']['us_email'];
+          final facebookid = responseData['user']['us_facebookid'];
+          final token = responseData['token'];
+
+
+
+
             final preferences = await SharedPreferences.getInstance();
-            await preferences.setString('us_username', profile['name']);
-            await preferences.setString('us_email', profile['email']);
-            await preferences.setString('us_googleId', profile['id']);
+            await preferences.setString('us_username', username);
+            await preferences.setString('us_email', email);
+            await preferences.setString('us_facebookid',facebookid);
             await preferences.setString('IsLoged', 'true');
             await preferences.setString('UserId', userId.toString());
+            await preferences.setString('token', token);
 
             Get.toNamed(AppRoutes.BrandsPage);
             facebookController.stop();
@@ -334,18 +369,31 @@ class AccountControllerImp extends AccountController {
 
           final response = await http.post(
             Uri.parse('${Environment.baseUrl}Auth/FacebookSignIn'),
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              'KeyToken': Environment.keyToken
+            },
             body: json.encode(userData),
           );
 
           if (response.statusCode == 200) {
-            var userId = jsonDecode(response.body)['us_user_id'];
+           final responseData = jsonDecode(response.body);
+          final userId = responseData['user']['us_user_id'];
+          final username = responseData['user']['us_username'];
+          final email = responseData['user']['us_email'];
+          final facebookid = responseData['user']['us_facebookid'];
+          final token = responseData['token'];
+
+
+
+
             final preferences = await SharedPreferences.getInstance();
-            await preferences.setString('us_username', profile['name']);
-            await preferences.setString('us_email', profile['email']);
-            await preferences.setString('us_googleId', profile['id']);
+            await preferences.setString('us_username', username);
+            await preferences.setString('us_email', email);
+            await preferences.setString('us_facebookid',facebookid);
             await preferences.setString('IsLoged', 'true');
             await preferences.setString('UserId', userId.toString());
+            await preferences.setString('token', token);
 
             Get.toNamed(AppRoutes.BrandsPage);
             facebookController.stop();

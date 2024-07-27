@@ -32,6 +32,9 @@ class Request {
           Uri.parse(Environment.baseUrl + linkurl),
           headers: {
             'Content-Type': 'application/json',
+            'KeyToken': Environment.keyToken,
+                        'Authorization': 'Bearer $userToken',
+
           },
           body: body,
         );
@@ -59,6 +62,9 @@ class Request {
           Uri.parse(Environment.baseUrl + linkurl),
           headers: {
             'Content-Type': 'application/json',
+            'KeyToken': Environment.keyToken,
+            'Authorization': 'Bearer $userToken',
+
           },
         );
 
@@ -86,6 +92,9 @@ class Request {
           Uri.parse(Environment.baseUrl + linkurl),
           headers: {
             'Content-Type': 'application/json',
+            'KeyToken': Environment.keyToken,
+            'Authorization': 'Bearer $userToken',
+
           },
         );
 

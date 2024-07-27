@@ -104,7 +104,7 @@ class VersionsPage extends StatelessWidget {
                             ),
                             padding: EdgeInsets.all(size.width * 0.04),
                             child: Text(
-                              translationController.GetMessages(8),
+                              translationController.GetMessages(24),
                               style: TextStyle(
                                 fontSize: size.width * 0.04,
                                 fontWeight: FontWeight.bold,

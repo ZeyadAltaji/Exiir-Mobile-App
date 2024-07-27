@@ -1,5 +1,6 @@
 import 'package:ExiirEV/Controller/BrandsController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Class/StatusRequest.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Views/Widget/buildbrand.dart';
@@ -12,9 +13,6 @@ class BrandsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stationId = Get.parameters['stationId'];
-    final type = Get.parameters['type'];
-
     final BrandsController controller = Get.put(BrandsController());
     final TranslationController translationController =
         Get.put(TranslationController());
@@ -23,9 +21,11 @@ class BrandsPage extends StatelessWidget {
     TextEditingController textController = TextEditingController();
     final double crossAxisSpacing = size.width * 0.04;
     final double mainAxisSpacing = size.height * 0.04;
+
     textController.addListener(() {
       controller.searchText.value = textController.text;
     });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Appcolors.logotwo,
@@ -88,6 +88,7 @@ class BrandsPage extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () {
+                     
                     if (controller.filteredBrands.isEmpty) {
                       return Center(
                         child: Container(
@@ -124,8 +125,15 @@ class BrandsPage extends StatelessWidget {
                             final brand = controller.filteredBrands[index];
                             return GestureDetector(
                               onTap: () {},
-                              child: buildbrand(brand, index, size,
-                                  crossAxisSpacing, mainAxisSpacing,stationId,type),
+                              child: buildbrand(
+                                brand,
+                                index,
+                                size,
+                                crossAxisSpacing,
+                                mainAxisSpacing,
+                                Get.parameters['stationId'],
+                                Get.parameters['type'],
+                              ),
                             );
                           },
                         ),
@@ -141,3 +149,4 @@ class BrandsPage extends StatelessWidget {
     );
   }
 }
+

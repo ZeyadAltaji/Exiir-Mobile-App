@@ -4,8 +4,10 @@ import 'package:ExiirEV/Views/screens/BookingPage.dart';
 import 'package:ExiirEV/Views/screens/Bookingsummary.dart';
 import 'package:ExiirEV/Views/screens/BrandsPage.dart';
 import 'package:ExiirEV/Views/screens/BrandsPageAdd.dart';
+import 'package:ExiirEV/Views/screens/DarkModeScreens.dart';
 import 'package:ExiirEV/Views/screens/ListandAddnewCars.dart';
 import 'package:ExiirEV/Views/screens/LoginPage.dart';
+import 'package:ExiirEV/Views/screens/MyCars.dart';
 import 'package:ExiirEV/Views/screens/PhoneNumberPage.dart';
 import 'package:ExiirEV/Views/screens/RegistrationPage.dart';
 import 'package:ExiirEV/Views/screens/SplashScreen.dart';
@@ -30,7 +32,9 @@ List<GetPage<dynamic>> routes = [
   GetPage(
       name: AppRoutes.ListandAddnewCars,
       page: () => const ListandAddnewCars(),
-      middlewares: [GlobalMiddleware()]),
+      middlewares: [GlobalMiddleware(directToAddCars: true)]),
   GetPage(name: AppRoutes.BookingPage, page: () => BookingPage()),
   GetPage(name: AppRoutes.Bookingsummary, page: () => Bookingsummary()),
+  GetPage(name: AppRoutes.MyCars, page: () => MyCars()),
+  GetPage(name: AppRoutes.DarkModeScreens, page: () => DarkModeScreens()),
 ];

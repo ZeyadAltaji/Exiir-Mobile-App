@@ -1,3 +1,4 @@
+import 'package:ExiirEV/Core/Class/StatusRequest.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -92,8 +93,10 @@ class ModelsPage extends StatelessWidget {
               ),
               Expanded(
                 child: Obx(
-                  () => controller.filteredModels.isEmpty
-                      ? Center(
+                  () {
+            
+                    if(controller.filteredModels.isEmpty){
+return Center(
                           child: Container(
                             width: size.width * 0.6,
                             decoration: BoxDecoration(
@@ -102,15 +105,16 @@ class ModelsPage extends StatelessWidget {
                             ),
                             padding: EdgeInsets.all(size.width * 0.04),
                             child: Text(
-                              translationController.GetMessages(8),
+                              translationController.GetMessages(23),
                               style: TextStyle(
                                 fontSize: size.width * 0.04,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        )
-                      : Padding(
+                        );
+                    }else{
+                      return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: GridView.builder(
                             physics: const BouncingScrollPhysics(),
@@ -132,8 +136,12 @@ class ModelsPage extends StatelessWidget {
                               );
                             },
                           ),
-                        ),
-                ),
+                        );
+                     }
+                  }
+                )
+                  
+                  ,
               ),
             ],
           ),

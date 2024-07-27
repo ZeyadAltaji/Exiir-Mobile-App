@@ -1,5 +1,6 @@
 import 'package:ExiirEV/Controller/BrandsController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
+import 'package:ExiirEV/Core/Class/StatusRequest.dart';
 import 'package:ExiirEV/Core/Constant/AppColors.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Views/Widget/buildbrand.dart';
@@ -88,6 +89,11 @@ class BrandsPageAdd extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () {
+                    if (controller.statusRequest == StatusRequest.loading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     if (controller.filteredBrands.isEmpty) {
                       return Center(
                         child: Container(

@@ -72,7 +72,7 @@ class _BookingPageState extends State<BookingPage> {
         backgroundColor: Appcolors.white,
         title: Text(
           textAlign: TextAlign.center,
-          translationController.getLanguage(93),
+          translationController.getLanguage(85),
           style: const TextStyle(
             color: Appcolors.Black,
             fontSize: 27,
@@ -337,6 +337,47 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
+  Widget buildBookingTypeSelector(BookingType bookingType) {
+    bool isVip = bookingType == BookingType.VIP;
+
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.only(left: 16, right: 16),
+        backgroundColor:
+            _selectedTrip == bookingType ? Appcolors.blue : Appcolors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+      onPressed: () {
+        setState(() {
+          _selectedTrip = bookingType;
+        });
+      },
+      child: Row(
+        children: <Widget>[
+          if (isVip)
+            Icon(
+              FontAwesomeIcons.crown,
+              color: _selectedTrip == bookingType
+                  ? Appcolors.white
+                  : Appcolors.blue,
+            ),
+          const SizedBox(width: 15),
+          Text(
+            _bookingType[bookingType]!,
+            style: TextStyle(
+              color: _selectedTrip == bookingType
+                  ? Appcolors.white
+                  : Appcolors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _tableCalendar() {
     return TableCalendar(
       locale: "en_US",
@@ -389,52 +430,37 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  Widget buildBookingTypeSelector(BookingType bookingType) {
-    bool isVip = bookingType == BookingType.VIP;
-
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.only(left: 16, right: 16),
-        backgroundColor:
-            _selectedTrip == bookingType ? Appcolors.blue : Appcolors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
-      onPressed: () {
-        setState(() {
-          _selectedTrip = bookingType;
-        });
-      },
-      child: Row(
-        children: <Widget>[
-          if (isVip)
-            Icon(
-              FontAwesomeIcons.crown,
-              color: _selectedTrip == bookingType
-                  ? Appcolors.white
-                  : Appcolors.blue,
-            ),
-          const SizedBox(width: 15),
-          Text(
-            _bookingType[bookingType]!,
-            style: TextStyle(
-              color: _selectedTrip == bookingType
-                  ? Appcolors.white
-                  : Appcolors.blue,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _checkAllIsAvailability() async {
-    if (_selectedStation == null ||
-        (_hoursController.text != '' && _minutesController.text == '') &&
-            _hoursController.text == '' &&
-            _minutesController.text != '') {
+    // if (_selectedStation == null || (_hoursController.text != '' && _minutesController.text != '') &&
+    //     (_hoursController.text != '' && _minutesController.text == '') &&
+    //         (_hoursController.text == '' &&
+    //         _minutesController.text != '')) {
+    //
+    // }
+    if (_selectedStation == null) {
+      ToastService.showWarningToast(
+        context,
+        message: translationController.GetMessages(16),
+      );
+      return;
+    }
+    if ((_hoursController.text == '' && _minutesController.text == '')) {
+      ToastService.showWarningToast(
+        context,
+        message: translationController.GetMessages(16),
+      );
+      return;
+    }
+    if ((_hoursController.text != '' && _minutesController.text == '') &&
+        (_hoursController.text == '' && _minutesController.text != '')) {
+      ToastService.showWarningToast(
+        context,
+        message: translationController.GetMessages(16),
+      );
+      return;
+    }
+    if ((_hoursController.text == '' && _minutesController.text != '') &&
+        (_hoursController.text != '' && _minutesController.text == '')) {
       ToastService.showWarningToast(
         context,
         message: translationController.GetMessages(16),
@@ -455,10 +481,15 @@ class _BookingPageState extends State<BookingPage> {
       int minute = _selectedTime.minute;
       int hours = int.tryParse(_hoursController.text) ?? 0;
       int minutes = int.tryParse(_minutesController.text) ?? 0;
+      final preferences = await SharedPreferences.getInstance();
+
+      String? userToken = preferences.getString('token');
       final response = await http.post(
         Uri.parse('${Environment.baseUrl}ExiirManagementAPI/checkAvailability'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'KeyToken': Environment.keyToken,
+          'Authorization': 'Bearer $userToken',
         },
         body: jsonEncode({
           'date': selectedDateTime.toIso8601String(),
@@ -468,30 +499,31 @@ class _BookingPageState extends State<BookingPage> {
           'stationId': _selectedStation!,
           'BookingType':
               _selectedTrip.toString().split('.').last == 'Normal' ? 1 : 2,
-           'language':
-             Get.locale?.languageCode == 'ar' ? 1 : 2,
+          'language': Get.locale?.languageCode == 'ar' ? 1 : 2,
         }),
       );
+      dynamic outPutMSG = jsonDecode(response.body)['outPutMSG'];
 
       if (response.statusCode == 200) {
         setState(() {
           _isAvailable = jsonDecode(response.body)['available'];
         });
+
         if (_isAvailable == true) {
           ToastService.showSuccessToast(
             context,
-            message: translationController.getLanguage(jsonDecode(response.body)['outPutMSG']),
+            message: translationController.GetMessages(int.parse(outPutMSG)),
           );
         } else {
           ToastService.showWarningToast(
             context,
-            message: translationController.GetMessages(jsonDecode(response.body)['outPutMSG']),
+            message: translationController.GetMessages(int.parse(outPutMSG)),
           );
         }
       } else {
         ToastService.showWarningToast(
           context,
-          message: translationController.GetMessages(jsonDecode(response.body)['outPutMSG']),
+          message: translationController.GetMessages(int.parse(outPutMSG)),
         );
       }
     } catch (e) {
@@ -534,14 +566,14 @@ class _BookingPageState extends State<BookingPage> {
           _selectedTime.minute,
         );
         bookingRequests.add({
-          'date': selectedDateTime.toIso8601String(),
+          'Date': selectedDateTime.toIso8601String(),
           'hour': hour,
           'minute': minute,
           'duration': durationInMinutes,
           'BookingType':
               _selectedTrip.toString().split('.').last == 'Normal' ? 1 : 2,
           'stationId': stationId!,
-          'type': type!,
+          'CarsType': type!,
           'br_id': BrId!,
           'mo_id': moid!,
           've_id': veid!,
@@ -564,7 +596,7 @@ class _BookingPageState extends State<BookingPage> {
             'BookingType':
                 _selectedTrip.toString().split('.').last == 'Normal' ? 1 : 2,
             'stationId': stationId!,
-            'type': type!,
+            'CarsType': type!,
             'br_id': BrId!,
             'mo_id': moid!,
             've_id': veid!,
@@ -572,10 +604,14 @@ class _BookingPageState extends State<BookingPage> {
           });
         }
       }
+      String? userToken = preferences.getString('token');
+
       final response = await http.post(
         Uri.parse('${Environment.baseUrl}ExiirManagementAPI/confirmBooking'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'KeyToken': Environment.keyToken,
+          'Authorization': 'Bearer $userToken',
         },
         body: jsonEncode(bookingRequests),
       );

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -6,6 +7,7 @@ import 'dart:ui' as ui;
 import 'package:ExiirEV/Controller/BaseController.dart';
 import 'package:ExiirEV/Controller/TranslationController.dart';
 import 'package:ExiirEV/Core/Class/Request.dart';
+import 'package:ExiirEV/Core/Constant/Environment.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Core/Functions/Handingdata.dart';
 import 'package:ExiirEV/Core/Functions/calculateDistance.dart';
@@ -17,6 +19,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -66,7 +69,7 @@ class HomeController extends BaseController {
           x: station.csLatitude.toString(),
           y: station.csLangtitude.toString(),
           address: station.csAddress,
-          available: Random().nextBool() == true ? translationController.getLanguage(63) : translationController.getLanguage(64),
+          available: station.csIsActive == true ? translationController.getLanguage(63) : translationController.getLanguage(64),
         )));
 
     _sortStationsByDistance();
@@ -273,13 +276,55 @@ class HomeController extends BaseController {
     }
   }
 
-  void goToLoginPage(int? stationid) {
+void goToBrandsPage(int? stationid) async {
+   final preferences = await SharedPreferences.getInstance();
+  final userId = preferences.getString('UserId');
+
+  if (userId != null) {
+    final hasCars = await userHasCars(userId);
+    if (hasCars) {
+      final String route = stationid != null
+          ? '${AppRoutes.ListandAddnewCars}?stationId=$stationid'
+          : AppRoutes.ListandAddnewCars;
+      Get.toNamed(route);
+    } else {
+      final String route = stationid != null
+          ? '${AppRoutes.BrandsPage}?stationId=$stationid'
+          : AppRoutes.BrandsPage;
+      Get.toNamed(route);
+    }
+  } else {
     final String route = stationid != null
-        ? '${AppRoutes.BrandsPage}?stationId=$stationid'
-        : AppRoutes.BrandsPage;
+        ? '${AppRoutes.LoginPage}?stationId=$stationid'
+        : AppRoutes.LoginPage;
     Get.toNamed(route);
   }
+  }
 
+Future<bool> userHasCars(String userId) async {
+  try {
+    final preferences = await SharedPreferences.getInstance();
+    String? userToken = preferences.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${Environment.baseUrl}ExiirManagementAPI/HasCars/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'KeyToken': Environment.keyToken,
+        'Authorization': 'Bearer $userToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as bool;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    print('Error fetching user cars: $e');
+    return false;
+  }
+}
   Future<BitmapDescriptor> _createCustomMarkerIcon(
       BuildContext context, double zoom) async {
     String imageUrl =

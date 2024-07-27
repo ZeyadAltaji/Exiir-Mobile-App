@@ -5,14 +5,11 @@ import 'package:ExiirEV/Core/Constant/Environment.dart';
 import 'package:ExiirEV/Core/Constant/ImgaeAssets.dart';
 import 'package:ExiirEV/Core/Constant/routes.dart';
 import 'package:ExiirEV/Views/screens/BookingPage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-final stationId = Get.parameters['stationId'];
-
-class ListandAddnewCars extends StatelessWidget {
-  const ListandAddnewCars({Key? key}) : super(key: key);
+class MyCars extends StatelessWidget {
+  const MyCars({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +19,8 @@ class ListandAddnewCars extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          textAlign: TextAlign.center,
           translationController.getLanguage(112),
+          textAlign: TextAlign.center,
           style: const TextStyle(
             color: Appcolors.Black,
             fontSize: 27,
@@ -42,33 +39,6 @@ class ListandAddnewCars extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Get.toNamed(AppRoutes.BrandsPageAdd);
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return dialogshow();
-                      },
-                    );
-                  },
-                  child: Text(translationController.getLanguage(113)),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: Obx(() => ListView.separated(
                   itemCount: carsController.lCars.length,
@@ -76,15 +46,15 @@ class ListandAddnewCars extends StatelessWidget {
                       const Divider(),
                   itemBuilder: (BuildContext context, int index) {
                     final listCar = carsController.lCars[index];
-                    return GestureDetector(
-                      onTap: () {
-                         final String route = stationId != null
-                                ? '${AppRoutes.BookingPage}?stationId=$stationId&type=${1}&BrandId=${listCar.br_id}&ModelId=${listCar.mo_id}&VersionsId=${listCar.ve_id}' 
-                                : AppRoutes.BookingPage;
-                        Get.toNamed(route);
+                    return Dismissible(
+                      key: Key(listCar.userCar_id.toString()),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        carsController.showDeleteDialog(
+                            context, listCar.userCar_id!);
                       },
                       child: ListTile(
-                          leading: Container(
+                        leading: Container(
                           width: 80, // عرض الصورة
                           height: 80, // طول الصورة
                           child: Image.network(
@@ -101,6 +71,13 @@ class ListandAddnewCars extends StatelessWidget {
                                 '${translationController.getLanguage(115)} - ${listCar.ve_name}'),
                           ],
                         ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            carsController.showDeleteDialog(
+                                context, listCar.userCar_id!);
+                          },
+                        ),
                       ),
                     );
                   },
@@ -112,7 +89,12 @@ class ListandAddnewCars extends StatelessWidget {
   }
 }
 
-class dialogshow extends StatelessWidget {
+class DialogShow extends StatelessWidget {
+  final VoidCallback onYes;
+  final VoidCallback onNo;
+
+  DialogShow({required this.onYes, required this.onNo});
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -129,33 +111,24 @@ class dialogshow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(height: 30),
+                Text(translationController.getLanguage(93)),
+                SizedBox(height: 20),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Flexible(
                         child: ElevatedButton(
-                          onPressed: () {
-                            final String route = stationId != null
-                                ? '${AppRoutes.BrandsPageAdd}?stationId=$stationId&type=${2}' 
-                                : AppRoutes.BrandsPageAdd;
-
-                            Get.toNamed(route);
-                          },
-                          child: Text(translationController.getLanguage(116)),
+                          onPressed: onYes,
+                          child: Text(translationController.getLanguage(132)),
                         ),
                       ),
-                     const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       Flexible(
                         child: ElevatedButton(
-                          onPressed: () {
-                            final String route = stationId != null
-                                ? '${AppRoutes.BrandsPageAdd}?stationId=$stationId&type=${1}' 
-                                : AppRoutes.BrandsPageAdd;
-
-                            Get.toNamed(route);
-                          },
-                          child: Text(translationController.getLanguage(117)),
+                          onPressed: onNo,
+                          child: Text(translationController.getLanguage(133)),
                         ),
                       ),
                     ],
@@ -168,7 +141,8 @@ class dialogshow extends StatelessWidget {
             top: -50,
             child: CircleAvatar(
               radius: 50,
-              child: Image.asset(AppimageUrlAsset.logo),
+              child: Image.asset(
+                  AppimageUrlAsset.logo), // Replace with your logo path
               backgroundColor: Colors.transparent,
             ),
           ),

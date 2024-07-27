@@ -11,6 +11,7 @@ import 'package:ExiirEV/Views/Widget/search_back_widget.dart';
 import 'package:ExiirEV/Views/Widget/search_menu_widget.dart';
 import 'package:ExiirEV/Views/Widget/dropDownbutton.dart';
 import 'package:ExiirEV/Views/Widget/ChargingStationModalWidget.dart';
+import 'package:ExiirEV/Views/screens/BookingPage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -26,7 +27,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final HomeController controller = Get.put(HomeController());
-  late AnimationController animationControllerExplore;
   late AnimationController animationControllerSearch;
   late AnimationController animationControllerMenu;
   late CurvedAnimation curve;
@@ -50,15 +50,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    animationControllerExplore = AnimationController(vsync: this);
     animationControllerSearch = AnimationController(vsync: this);
     animationControllerMenu = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
-    animationControllerExplore.dispose();
-    animationControllerSearch.dispose();
+     animationControllerSearch.dispose();
     animationControllerMenu.dispose();
     super.dispose();
   }
@@ -74,45 +72,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  void onExploreVerticalUpdate(details) {
-    setState(() {
-      offsetExplore -= details.delta.dy;
-      if (offsetExplore <= 644) {
-        offsetExplore = 644;
-      } else if (offsetExplore < 0) {
-        offsetExplore = 0;
-      }
-    });
-  }
 
-  void animateExplore(bool open) {
-    animationControllerExplore = AnimationController(
-      duration: Duration(
-        milliseconds: 1 +
-            (800 *
-                    (isExploreOpen
-                        ? currentExplorePercent
-                        : (1 - currentExplorePercent)))
-                .toInt(),
-      ),
-      vsync: this,
-    );
-    curve =
-        CurvedAnimation(parent: animationControllerExplore, curve: Curves.ease);
-    animation = Tween(begin: offsetExplore, end: open ? 760.0 - 122 : 0.0)
-        .animate(curve)
-      ..addListener(() {
-        setState(() {
-          offsetExplore = animation.value;
-        });
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          isExploreOpen = open;
-        }
-      });
-    animationControllerExplore.forward();
-  }
+
+  
 
   void animateSearch(bool open) {
     animationControllerSearch = AnimationController(
@@ -161,7 +123,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             }
           });
     animationControllerMenu.forward();
-  }
+   }
 
   void toggleDropdownVisibility() {
     setState(() {
@@ -335,11 +297,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
         bottomNavigationBar: ConvexAppBar(
             items: [
-              TabItem(icon: Icons.menu, title: 'menu'),
+              TabItem(icon: Icons.menu, title: translationController.getLanguage(125)),
               TabItem(
                   icon: FontAwesomeIcons.chargingStation,
-                  title: 'charging Station'),
-              TabItem(icon: Icons.search, title: 'search'),
+                  title: translationController.getLanguage(89)),
+              TabItem(icon: Icons.search, title: translationController.getLanguage(126)),
             ],
             initialActiveIndex: 1,
             onTap: (index) {

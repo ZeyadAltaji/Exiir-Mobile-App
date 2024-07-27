@@ -29,7 +29,9 @@ class TranslationController extends BaseController {
             (X509Certificate cert, String host, int port) => true;
       IOClient ioClient = IOClient(httpClient);
       final response = await ioClient.get(
-          Uri.parse('${Environment.baseUrl}ExiirManagementAPI/GetMessages'));
+          Uri.parse('${Environment.baseUrl}ExiirManagementAPI/GetMessages'),   headers: <String, String>{
+           'KeyToken': Environment.keyToken
+        });
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -57,7 +59,10 @@ class TranslationController extends BaseController {
             (X509Certificate cert, String host, int port) => true;
       IOClient ioClient = IOClient(httpClient);
       final response = await ioClient.get(
-          Uri.parse('${Environment.baseUrl}ExiirManagementAPI/GetLanguage'));
+          Uri.parse('${Environment.baseUrl}ExiirManagementAPI/GetLanguage'),
+           headers: <String, String>{
+           'KeyToken': Environment.keyToken
+        });
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         data.forEach((item) {
